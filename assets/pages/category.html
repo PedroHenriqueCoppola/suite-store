@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="../css/category.css">
+    
+    <link rel="shortcut icon" href="/assets/images/logo.png" type="image/x-icon">
+    
+    <title>Categories</title>
+</head>
+<body>
+    <main>
+        <div class="app">
+            <header>
+                <a href="../../index.html" class="title">Suite Store</a>
+
+                <nav>
+                    <a href="../../index.html">Home</a>
+                    <a href="../pages/products.html">Products</a>
+                    <a href="#">Categories</a>
+                    <a href="../pages/history.html">History</a>
+                </nav>
+            </header>      
+
+            <section class="content">
+                <form id="newCategoryForm">
+                    <div class="category">
+                        <div class="categoryContent">
+                            <input 
+                                type="text" 
+                                id="categoryName" 
+                                placeholder="Category name:"
+                            />
+                        </div>
+    
+                        <div class="taxContent">
+                            <input 
+                                type="number" 
+                                id="tax" 
+                                placeholder="Tax:"
+                                step="0.01"
+                                min="1"
+                                max="100"
+                            />
+                        </div>
+    
+                        <button id="categoryButton" onclick="addNewCategory()">Add New Category</button>
+                    </div>
+                    
+                    <div class="errorMessage">
+                        <p>Os campos são obrigatórios!</p>
+                    </div>
+                </form>
+    
+                <div class="line"></div>
+    
+                <div class="categoryTable">
+                    <table id="categoryTable">
+                        <thead>
+                            <th class="thCode">Code</th>
+                            <th>Category</th>
+                            <th>Tax</th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="firstEmptyTd"></td>
+                                <td class="emptyTd"></td>
+                                <td class="emptyTd"></td>
+                                <td class="lastEmptyTd">
+                                    <button class="lastTdButton"></button>
+                                </td>
+                            </tr>
+                        </tbody> 
+                    </table>
+                </div> 
+            </section>
+
+            <footer>
+                <p class="rights">© 2024 SoftExpert. All rights reserved.</p>
+            </footer>
+        </div>
+    </main>
+    <script src="../src/category.js"></script>
+    <script>
+        loadCategories();
+        initCodeCount();
+    </script>
+
+</body>
+</html>

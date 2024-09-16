@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="./style.css">
+    
+    <link rel="shortcut icon" href="assets/images/logo.png" type="image/x-icon">
+    
+    <title>Suite Store</title>
+</head>
+<body>
+    <main>
+        <div class="app">
+            <header>
+                <a class="title">Suite Store</a>
+
+                <nav class="nav">
+                    <a href="#">Home</a>
+                    <a href="assets/pages/products.html">Products</a>
+                    <a href="assets/pages/category.html">Categories</a>
+                    <a href="assets/pages/history.html">History</a>
+                </nav>
+            </header>
+
+            <section class="content">
+                <form id="addProductForm" method="post">
+                    <div class="values">
+                        <select id="productName">
+                            <option>Rice</option>
+                            <option>Beans</option>
+                            <option>Pasta</option>
+                            <option>Meat</option>
+                        </select>
+
+                        <div id="amountContent">
+                            <input 
+                                type="number" 
+                                id="productAmount" 
+                                name="productAmount" 
+                                placeholder="Amount"
+                                min="1"
+                            />
+                        </div>
+
+                        <input 
+                            type="text" 
+                            id="productTax" 
+                            name="productTax"
+                            placeholder="Tax" 
+                            disabled
+                        />
+                        
+                        <input 
+                            type="text" 
+                            id="productUnit" 
+                            name="productUnit" 
+                            placeholder="Price" 
+                            disabled
+                        />
+                        
+                        <button id="productButton" type="submit">Add Product</button>
+                    </div>
+
+                    <div class="errorMessage">
+                        <p>Este campo é obrigatório!</p>
+                    </div>
+                </form>
+
+                <div class="line"></div>
+    
+                <div class="finalPrice">
+                    <table>
+                        <thead>
+                            <th class="thProduct">Product</th>
+                            <th>Unit price</th>
+                            <th>Amount</th>
+                            <th>Total</th>
+                        </thead>
+        
+                        <tr>
+                            <td class="firstTd">Rice</td>
+                            <td>$20.00</td>
+                            <td>2</td>
+                            <td>40.00</td>
+                            <td class="lastTd">
+                                <button class="tdButton">Delete</button>
+                            </td>
+                        </tr>
+        
+                        <tr>
+                            <td class="firstTd">Beans</td>
+                            <td>$9.00</td>
+                            <td>1</td>
+                            <td>9.00</td>
+                            <td class="lastTd">
+                                <button class="tdButton">Delete</button>
+                            </td>
+                        </tr>
+
+                        <!-- teste de coluna vazia-->
+                        <tr>
+                            <td class="firstEmptyTd"></td>
+                            <td class="emptyTd"></td>
+                            <td class="emptyTd"></td>
+                            <td class="emptyTd"></td>
+                            <td class="lastEmptyTd">
+                                <button class="lastTdButton"></button>
+                            </td>
+                        </tr>
+                    </table>
+        
+                    <form id="finishForm">
+                        <div class="taxes">
+                            <div class="finalTax">
+                                <h4>Tax:</h4>
+                                <p>$10.00</p>
+                            </div>
+        
+                            <div class="finalTotal">
+                                <h4>Total:</h4>
+                                <p>$1000.00</p>
+                            </div>
+
+                            <div>
+                                <button class="cancel">Cancel</button>
+                                <button class="finish">Finish</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <footer>
+                <p class="rights">© 2024 SoftExpert. All rights reserved.</p>
+            </footer>
+        </div>
+    </main>
+    <script src="main.js"></script>
+    <script>
+        initCategories();
+    </script>
+</body>
+</html>
