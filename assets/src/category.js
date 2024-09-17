@@ -5,49 +5,12 @@ const errorMessage = document.querySelector(".errorMessage");
 let isSubmitting = false; // controle para evitar múltiplos submits
 let code = getCodeFromLocalStorage() || 1;
 
+
 window.onload = function() {
     initCategories();
     initCodeCount();
     loadCategories();
 };
-
-// 'submit' só vai ser adicionado uma vez
-if (newCategoryForm) {
-    newCategoryForm.addEventListener('submit', e => {
-        e.preventDefault();
-
-        if (isSubmitting) return; // se já estiver processando, não prossegue
-        isSubmitting = true; // flag dizendo que o envio ta em andamento
-
-        checkCategoryNameInput();
-        checkTaxInput();
-
-        isSubmitting = false; // flag liberada depois da submissão ser processada
-    });
-}
-
-function checkCategoryNameInput() {
-    const categoryNameValue = categoryName.value;
-    
-    if (categoryNameValue === "") {
-        inputError(categoryName);
-    } else {
-        removeInputError(categoryName);
-    }
-}
-
-function checkTaxInput() { 
-    const taxValue = parseFloat(tax.value); // converte para número
-    
-    if (tax.value === "") {
-        inputError(tax);
-    } else if (isNaN(taxValue) || taxValue <= 0) {
-        alert("The tax value must be a number bigger than 0.");
-        inputError(tax);
-    } else {
-        removeInputError(tax);
-    }
-}
 
 function initCategories() {
     if (!localStorage.getItem('categories')) {
@@ -59,6 +22,66 @@ function initCodeCount() {
     if(!localStorage.getItem('codeCount')) {
         localStorage.setItem('codeCount', 1);
     }
+}
+
+newCategoryForm.addEventListener('submit', e => {
+    e.preventDefault();
+
+    if (isSubmitting) return; // se já estiver processando, não prossegue
+    isSubmitting = true; // flag dizendo que o envio ta em andamento
+
+    addNewCategory();
+
+    isSubmitting = false; // flag liberada depois da submissão ser processada
+});
+
+function checkCategoryNameAndTaxInput(){
+    const name = getCorrectName(document.getElementById("categoryName").value);
+
+    if(categoryName.value === "" && tax.value === "") {
+        inputError(categoryName);
+        inputError(tax);
+        return false;
+    } else if(categoryName.value === "" && tax.value !== "") {
+        inputError(categoryName);
+        return false;
+    } else if(categoryName.value !== "" && tax.value === "") {
+        inputError(tax);
+        return false;
+    } else {
+        removeInputError(categoryName);
+        removeInputError(tax);
+    }
+    
+    // previne só espaço no nome
+    if (name == "") {
+        inputError(categoryName);
+        return false;
+    }
+
+    // não permitir números nem caracteres especiais
+    if(!limitTextInput(name)) {
+        alert("No numbers or special characters allowed on 'Category name'.")
+        return false;
+    }
+
+    // validação do número entre 1 e 99,9
+    if((tax.value) > 100 || tax.value <= 0 || isNaN(tax.value)) {
+        alert("Please, insert an number between 1 and 99,9.")
+        return false;
+    } 
+}
+
+function limitTextInput(inputValue) {
+    const textRegex = new RegExp(
+        /[a-zA-Z]/
+    );
+
+    if(textRegex.test(inputValue)) {
+        return true;
+    }
+
+    return false;
 }
 
 function getCodeFromLocalStorage() {
@@ -73,28 +96,41 @@ function getCategoriesFromLocalStorage() {
     return JSON.parse(localStorage.getItem('categories')) || []; // pega a categories iniciada
 }
 
+function getCorrectName(categoryName) {
+    return categoryName.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/^\s+|\s+$/g,"").trim();
+}
+
+function getCorrectTaxToSave(taxValue) {
+    return parseFloat(taxValue).toFixed(2);
+}
+
 function addNewCategory() {
-    console.log("Adding new category");
+    if(checkCategoryNameAndTaxInput() == false) {
+        // pass
+    } else {
+        const categories = getCategoriesFromLocalStorage();
 
-    const categories = getCategoriesFromLocalStorage(); 
-    var category = { 
-        code: getValidId(),
-        categoryName: categoryName.value,
-        tax: tax.value
-    };
-    
-    categories.push(category); // adicionar na lista
-    localStorage.setItem('categories', JSON.stringify(categories)); // devolve pro localstoratge
+        const name = getCorrectName(document.getElementById("categoryName").value);
 
-    loadCategories(); // recarrega a tela depois de adicionar categoria
+        const taxToSave = getCorrectTaxToSave(document.getElementById("tax").value);
+
+        var category = { 
+            code: getValidId(),
+            categoryName: name,
+            tax: taxToSave
+        };
+        
+        categories.push(category); // adicionar na lista
+        localStorage.setItem('categories', JSON.stringify(categories)); // devolve pro localstoratge
+
+        loadCategories(); // recarrega a tela depois de adicionar categoria
+    }
 }
 
 function loadCategories() {
     const tbody = document.querySelector('#categoryTable tbody'); 
     tbody.innerHTML = ''; // serve pra limpar o corpo da tabela antes de carregar
-
-    // alert("oi, entrei na load");
-
+    
     const categories = getCategoriesFromLocalStorage();
 
     categories.forEach(c => {
@@ -143,8 +179,10 @@ function loadCategories() {
 
 function deleteCategory(categoryId) {
     let categories = getCategoriesFromLocalStorage();
+
     categories = categories.filter(category => category.code != categoryId);
     localStorage.setItem('categories', JSON.stringify(categories));
+    
     loadCategories();
 }
 
