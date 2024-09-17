@@ -31,9 +31,3 @@ function removeInputError(input) {
     errorMessage.classList.remove("active");
     errorMessage.classList.add("errorMessage");
 }
-
-function initCategories() {
-    if (!localStorage.getItem('categories')) {
-        localStorage.setItem('categories', JSON.stringify([])); // inicia o localstorage
-    }
-}

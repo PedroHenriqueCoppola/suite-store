@@ -2,26 +2,41 @@ const newCategoryForm = document.getElementById("newCategoryForm");
 const categoryName = document.getElementById("categoryName");
 const tax = document.getElementById("tax");
 const errorMessage = document.querySelector(".errorMessage");
-let code = getCodeFromLocalStorage();
+let isSubmitting = false; // controle para evitar múltiplos submits
+let code = getCodeFromLocalStorage() || 1;
 
-newCategoryForm.addEventListener('submit', e => {
-    e.preventDefault();
-    
-    checkCategoryNameInput();
-    checkTaxInput();
-})
+window.onload = function() {
+    initCategories();
+    initCodeCount();
+    loadCategories();
+};
+
+// 'submit' só vai ser adicionado uma vez
+if (newCategoryForm) {
+    newCategoryForm.addEventListener('submit', e => {
+        e.preventDefault();
+
+        if (isSubmitting) return; // se já estiver processando, não prossegue
+        isSubmitting = true; // flag dizendo que o envio ta em andamento
+
+        checkCategoryNameInput();
+        checkTaxInput();
+
+        isSubmitting = false; // flag liberada depois da submissão ser processada
+    });
+}
 
 function checkCategoryNameInput() {
     const categoryNameValue = categoryName.value;
     
-    if(categoryNameValue === "") {
+    if (categoryNameValue === "") {
         inputError(categoryName);
-    } else if (categoryNameValue !== "") {
+    } else {
         removeInputError(categoryName);
     }
 }
 
-function checkTaxInput() {
+function checkTaxInput() { 
     const taxValue = parseFloat(tax.value); // converte para número
     
     if (tax.value === "") {
@@ -31,6 +46,12 @@ function checkTaxInput() {
         inputError(tax);
     } else {
         removeInputError(tax);
+    }
+}
+
+function initCategories() {
+    if (!localStorage.getItem('categories')) {
+        localStorage.setItem('categories', JSON.stringify([])); // inicia o localstorage
     }
 }
 
@@ -48,14 +69,15 @@ function updateCodeInLocalStorage(codeCount) {
     localStorage.setItem('codeCount', codeCount);
 }
 
-function getCategoriesFromLocalStorage() {
-    return JSON.parse(localStorage.getItem('categories')); // pega a categories iniciada
+function getCategoriesFromLocalStorage() { 
+    return JSON.parse(localStorage.getItem('categories')) || []; // pega a categories iniciada
 }
 
 function addNewCategory() {
-    const categories = getCategoriesFromLocalStorage(); // pega a que ja existe
+    console.log("Adding new category");
 
-    var category = { // objeto da categoria
+    const categories = getCategoriesFromLocalStorage(); 
+    var category = { 
         code: getValidId(),
         categoryName: categoryName.value,
         tax: tax.value
@@ -64,20 +86,21 @@ function addNewCategory() {
     categories.push(category); // adicionar na lista
     localStorage.setItem('categories', JSON.stringify(categories)); // devolve pro localstoratge
 
-    loadCategories();
+    loadCategories(); // recarrega a tela depois de adicionar categoria
 }
 
 function loadCategories() {
     const tbody = document.querySelector('#categoryTable tbody'); 
-    tbody.innerHTML = '';
-    const categories = getCategoriesFromLocalStorage();
+    tbody.innerHTML = ''; // serve pra limpar o corpo da tabela antes de carregar
 
     // alert("oi, entrei na load");
+
+    const categories = getCategoriesFromLocalStorage();
 
     categories.forEach(c => {
         // nova linha
         const row = document.createElement('tr');
-
+        
         // cria as td pra code, categoryName e tax
         const codeTd = document.createElement('td');
         codeTd.textContent = c.code;
@@ -102,7 +125,6 @@ function loadCategories() {
         // adiciona o onclick
         deleteButton.onclick = function() {
             deleteCategory(this.id);
-            console.log("Estou tentando excluir");
         };
         
         // adiciona o botão ao td
@@ -120,36 +142,31 @@ function loadCategories() {
 }
 
 function deleteCategory(categoryId) {
-    console.log(categoryId);
     let categories = getCategoriesFromLocalStorage();
-
     categories = categories.filter(category => category.code != categoryId);
-
     localStorage.setItem('categories', JSON.stringify(categories));
     loadCategories();
 }
 
 function getValidId() {
-    code;
+    let code = getCodeFromLocalStorage() || 1;
 
-    while (!ensureIdIsValid()) {
-        code ++;
+    while (!ensureIdIsValid(code)) {
+        code++;
     }
 
-    updateCodeInLocalStorage();
-
+    updateCodeInLocalStorage(code + 1);
     return code;
 }
 
-function ensureIdIsValid() {
+function ensureIdIsValid(code) {
     const categories = getCategoriesFromLocalStorage();
 
     for (let cat of categories) {
         if (cat.code == code) {
             return false;
         }
-    };
-
+    }
     return true;
 }
 
