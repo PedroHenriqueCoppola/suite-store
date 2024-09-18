@@ -1,14 +1,16 @@
+const categoryCount = 'categoryCodeCount';
+const categoriesJson = 'categories';
+
 const newCategoryForm = document.getElementById("newCategoryForm");
 const categoryName = document.getElementById("categoryName");
 const tax = document.getElementById("tax");
 const errorMessage = document.querySelector(".errorMessage");
 let isSubmitting = false; // controle para evitar múltiplos submits
-let code = getCodeFromLocalStorage() || 1;
-
+let code = getCodeFromLocalStorage(categoryCount) || 1;
 
 window.onload = function() {
     initCategories();
-    initCodeCount();
+    initCategoryCodeCount();
     loadCategories();
 };
 
@@ -18,9 +20,9 @@ function initCategories() {
     }
 }
 
-function initCodeCount() {
-    if(!localStorage.getItem('codeCount')) {
-        localStorage.setItem('codeCount', 1);
+function initCategoryCodeCount() {
+    if(!localStorage.getItem(categoryCount)) {
+        localStorage.setItem(categoryCount, 1);
     }
 }
 
@@ -65,11 +67,29 @@ function checkCategoryNameAndTaxInput(){
         return false;
     }
 
+    // RESOLVER A VALIDAÇÃO DE NOMES IGUAIS
+    // if (findExistentCategoryName(name)) {
+    //     alert("This name already exists.");
+    //     return false;
+    // }
+
     // validação do número entre 1 e 99,9
     if((tax.value) > 100 || tax.value <= 0 || isNaN(tax.value)) {
         alert("Please, insert an number between 1 and 99,9.")
         return false;
     } 
+}
+
+// RESOLVER O PROBLEMA DO FILTER NA VALIDAÇÃO DE NOMES IGUAIS
+function findExistentCategoryName(name) {
+    const categoriesList = getObjectFromLocalStorage(categoriesJson);
+    return categoriesList.filter(element => element.categoryName == name); // entra no category name de cada objeto do array e compara se ja existe um name. se tiver ele retorna true, se não ele segue
+
+    // outra forma de fazer
+    // categoriesList.array.forEach(element => {
+    //     if (element.categoryName == name) return true;
+    // });
+    // return false;
 }
 
 function limitTextInput(inputValue) {
@@ -84,16 +104,8 @@ function limitTextInput(inputValue) {
     return false;
 }
 
-function getCodeFromLocalStorage() {
-    return parseInt(localStorage.getItem('codeCount'));
-}
-
 function updateCodeInLocalStorage(codeCount) {
-    localStorage.setItem('codeCount', codeCount);
-}
-
-function getCategoriesFromLocalStorage() { 
-    return JSON.parse(localStorage.getItem('categories')) || []; // pega a categories iniciada
+    localStorage.setItem(categoryCount, codeCount);
 }
 
 function getCorrectName(categoryName) {
@@ -108,7 +120,7 @@ function addNewCategory() {
     if(checkCategoryNameAndTaxInput() == false) {
         // pass
     } else {
-        const categories = getCategoriesFromLocalStorage();
+        const categories = getObjectFromLocalStorage(categoriesJson);
 
         const name = getCorrectName(document.getElementById("categoryName").value);
 
@@ -131,7 +143,7 @@ function loadCategories() {
     const tbody = document.querySelector('#categoryTable tbody'); 
     tbody.innerHTML = ''; // serve pra limpar o corpo da tabela antes de carregar
     
-    const categories = getCategoriesFromLocalStorage();
+    const categories = getObjectFromLocalStorage(categoriesJson);
 
     categories.forEach(c => {
         // nova linha
@@ -178,7 +190,7 @@ function loadCategories() {
 }
 
 function deleteCategory(categoryId) {
-    let categories = getCategoriesFromLocalStorage();
+    let categories = getObjectFromLocalStorage(categoriesJson);
 
     categories = categories.filter(category => category.code != categoryId);
     localStorage.setItem('categories', JSON.stringify(categories));
@@ -187,7 +199,7 @@ function deleteCategory(categoryId) {
 }
 
 function getValidId() {
-    let code = getCodeFromLocalStorage() || 1;
+    let code = getCodeFromLocalStorage(categoryCount) || 1;
 
     while (!ensureIdIsValid(code)) {
         code++;
@@ -198,7 +210,7 @@ function getValidId() {
 }
 
 function ensureIdIsValid(code) {
-    const categories = getCategoriesFromLocalStorage();
+    const categories = getObjectFromLocalStorage(categoriesJson);
 
     for (let cat of categories) {
         if (cat.code == code) {
