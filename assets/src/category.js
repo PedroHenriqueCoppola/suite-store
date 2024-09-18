@@ -3,10 +3,10 @@ const categoriesJson = 'categories';
 
 const newCategoryForm = document.getElementById("newCategoryForm");
 const categoryName = document.getElementById("categoryName");
+const categoryNameValue = document.getElementById("categoryName").value;
 const tax = document.getElementById("tax");
-const errorMessage = document.querySelector(".errorMessage");
+
 let isSubmitting = false; // controle para evitar múltiplos submits
-let code = getCodeFromLocalStorage(categoryCount) || 1;
 
 window.onload = function() {
     initCategories();
@@ -38,26 +38,26 @@ newCategoryForm.addEventListener('submit', e => {
 });
 
 function checkCategoryNameAndTaxInput(){
-    const name = getCorrectName(document.getElementById("categoryName").value);
+    const name = validateInputSpaces(document.getElementById("categoryName").value);
 
-    if(categoryName.value === "" && tax.value === "") {
+    if(name == "" && tax.value == "") {
         inputError(categoryName);
         inputError(tax);
         return false;
-    } else if(categoryName.value === "" && tax.value !== "") {
+    } else if(name == "" && tax.value != "") {
         inputError(categoryName);
         return false;
-    } else if(categoryName.value !== "" && tax.value === "") {
+    } else if(name != "" && tax.value == "") {
         inputError(tax);
         return false;
     } else {
         removeInputError(categoryName);
         removeInputError(tax);
     }
-    
-    // previne só espaço no nome
-    if (name == "") {
-        inputError(categoryName);
+
+    // limita o nome da categoria a 25 caracteres
+    if(name.length > 25) {
+        alert("The max name length is 25 characters.");
         return false;
     }
 
@@ -67,29 +67,24 @@ function checkCategoryNameAndTaxInput(){
         return false;
     }
 
-    // RESOLVER A VALIDAÇÃO DE NOMES IGUAIS
-    // if (findExistentCategoryName(name)) {
-    //     alert("This name already exists.");
-    //     return false;
-    // }
+    // validar nomes iguais
+    if (findExistentCategoryName(name)) {
+        alert("This name already exists.");
+        return false;
+    }
 
     // validação do número entre 1 e 99,9
     if((tax.value) > 100 || tax.value <= 0 || isNaN(tax.value)) {
-        alert("Please, insert an number between 1 and 99,9.")
+        alert("Please, insert an number between 1 and 99.9.")
         return false;
     } 
 }
 
-// RESOLVER O PROBLEMA DO FILTER NA VALIDAÇÃO DE NOMES IGUAIS
 function findExistentCategoryName(name) {
     const categoriesList = getObjectFromLocalStorage(categoriesJson);
-    return categoriesList.filter(element => element.categoryName == name); // entra no category name de cada objeto do array e compara se ja existe um name. se tiver ele retorna true, se não ele segue
-
-    // outra forma de fazer
-    // categoriesList.array.forEach(element => {
-    //     if (element.categoryName == name) return true;
-    // });
-    // return false;
+    const category = categoriesList.filter(element => element.categoryName == name);
+    console.log(category)
+    return category[0];
 }
 
 function limitTextInput(inputValue) {
@@ -104,14 +99,6 @@ function limitTextInput(inputValue) {
     return false;
 }
 
-function updateCodeInLocalStorage(codeCount) {
-    localStorage.setItem(categoryCount, codeCount);
-}
-
-function getCorrectName(categoryName) {
-    return categoryName.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/^\s+|\s+$/g,"").trim();
-}
-
 function getCorrectTaxToSave(taxValue) {
     return parseFloat(taxValue).toFixed(2);
 }
@@ -122,12 +109,12 @@ function addNewCategory() {
     } else {
         const categories = getObjectFromLocalStorage(categoriesJson);
 
-        const name = getCorrectName(document.getElementById("categoryName").value);
+        const name = validateInputSpaces(document.getElementById("categoryName").value);
 
         const taxToSave = getCorrectTaxToSave(document.getElementById("tax").value);
 
         var category = { 
-            code: getValidId(),
+            code: getValidCategoryId(),
             categoryName: name,
             tax: taxToSave
         };
@@ -158,7 +145,7 @@ function loadCategories() {
         categoryNameTd.textContent = c.categoryName;
 
         const taxTd = document.createElement('td');
-        taxTd.textContent = c.tax;
+        taxTd.textContent = c.tax + "%";
 
         // cria o td e adiciona a classe 'lastTd'
         const deleteTd = document.createElement('td');
@@ -178,7 +165,7 @@ function loadCategories() {
         // adiciona o botão ao td
         deleteTd.appendChild(deleteButton);
         
-        // adiciona as células na linha
+        // adiciona as células aos respectivos tds
         row.appendChild(codeTd);
         row.appendChild(categoryNameTd);
         row.appendChild(taxTd);
@@ -198,10 +185,14 @@ function deleteCategory(categoryId) {
     loadCategories();
 }
 
-function getValidId() {
+function updateCodeInLocalStorage(codeCount) {
+    localStorage.setItem(categoryCount, codeCount);
+}
+
+function getValidCategoryId() {
     let code = getCodeFromLocalStorage(categoryCount) || 1;
 
-    while (!ensureIdIsValid(code)) {
+    while (!ensureCategoryIdIsValid(code)) {
         code++;
     }
 
@@ -209,7 +200,7 @@ function getValidId() {
     return code;
 }
 
-function ensureIdIsValid(code) {
+function ensureCategoryIdIsValid(code) {
     const categories = getObjectFromLocalStorage(categoriesJson);
 
     for (let cat of categories) {
@@ -218,16 +209,4 @@ function ensureIdIsValid(code) {
         }
     }
     return true;
-}
-
-function inputError(input) {
-    input.parentElement.classList.add("contentError");
-    errorMessage.classList.add("active");
-    errorMessage.classList.remove("errorMessage");
-}
-
-function removeInputError(input) {
-    input.parentElement.classList.remove("contentError");
-    errorMessage.classList.remove("active");
-    errorMessage.classList.add("errorMessage");
 }

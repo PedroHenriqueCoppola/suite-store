@@ -26,68 +26,70 @@
             </header>
             
             <section class="content">
-                <form id="new-product-form">
+                <form id="newProductForm">
                     <div class="product">
-                        <input type="text" id="product-name" placeholder="Product name:" required/>
-    
-                        <input type="text" id="amount" placeholder="Amount:"/>
-                        
-                        <input type="text" id="unit-price" placeholder="Unit price:"/>
-    
-                        <select id="category">
-                            <!-- <option value="">Food</option>
-                            <option value="">Eletro</option>
-                            <option value="">Drink</option> -->
-                        </select>
-                        
-                        <button id="product-button">Add New Product</button>
-                    </div>            
-                </form>
+                        <div class="nameContent">
+                            <input 
+                                type="text" 
+                                id="productName" 
+                                placeholder="Product name:"
+                            />
+                        </div>
 
-                <div class="line"></div>
+                        <div class="amountContent">
+                            <input 
+                                type="number" 
+                                id="productAmount" 
+                                placeholder="Amount:"
+                                step="0.01"
+                                min="1"
+                                max="10000"
+                            />
+                        </div>
     
-                <div class="products-table">
-                    <table>
-                        <tr>
-                            <th id="th-code">Code</th>
+                        <div class="priceContent">
+                            <input 
+                                type="number" 
+                                id="unitPrice" 
+                                placeholder="Unit price:"
+                                step="0.01"
+                                min="1"
+                                max="10000"
+                            />
+                        </div>
+                        
+                        <select id="category"></select>
+                        
+                        <button id="productButton">Add New Product</button>
+                    </div>
+
+                    <div class="errorMessage">
+                        <p>All the information must be filled!</p>
+                    </div>          
+                </form>
+    
+                <div class="productsTable">
+                    <table id="productsTable">
+                        <thead>
+                            <th class="thCode">Code</th>
                             <th>Product</th>
                             <th>Amount</th>
                             <th>Unit price</th>
                             <th>Category</th>
-                        </tr>
+                        </thead>
         
-                        <tr>
-                            <td id="first-td">001</td>
-                            <td>Rice</td>
-                            <td>10</td>
-                            <td>20.00</td>
-                            <td>Food</td>
-                            <td id="last-td">
-                                <button id="td-button">Delete</button>
-                            </td>
-                        </tr>
-        
-                        <tr>
-                            <td id="first-td">002</td>
-                            <td>Beans</td>
-                            <td>1</td>
-                            <td>9.00</td>
-                            <td>Food</td>
-                            <td id="last-td">
-                                <button id="td-button">Delete</button>
-                            </td>
-                        </tr>
-
-                        <!-- teste de coluna vazia-->
-                        <tr>
-                            <td id="first-empty-td"></td>
-                            <td id="empty-td"></td>
-                            <td id="empty-td"></td>
-                            <td id="empty-td"></td>
-                            <td id="last-empty-td">
-                                <button id="last-td-button"></button>
-                            </td>
-                        </tr>
+                        <tbody>
+                            <tr>
+                                <td class="firstTd">001</td>
+                                <td>Rice</td>
+                                <td>10</td>
+                                <td>20.00</td>
+                                <td>Food</td>
+                                <td class="lastTd">
+                                    <button class="tdButton">Delete</button>
+                                </td>
+                            </tr>
+                        </tbody>
                     </table> 
                 </div> 
             </section>

@@ -23,6 +23,7 @@
     --purple-300: hsl(256, 79%, 62%);
     --purple-100: hsl(256, 85%, 68%);
     --ghostwhite: hsl(240, 36%, 96%);
+    --error-red: hsl(6, 100%, 57%);
     --oil-black: hsl(240, 7%, 19%);
     --input-cancelled: hsl(0, 0%, 93%);
 }
@@ -103,32 +104,11 @@ header > nav > a:hover {
     "button button";
 }
 
-#product-name {grid-area: product;}
-
-#amount {grid-area: amount;}
-
-#unit-price {
-    grid-area: unit;
-}
-
-#category {
-    grid-area: category;
-}
-
-#product-button {
-    grid-area: button;
-
-    border: none;
-    color: var(--oil-black);
-    background-color: var(--purple-300);
-    font-weight: 700;
-}
-
-#product-name,
-#amount,
-#unit-price,
+#productName,
+#productAmount,
+#unitPrice,
 #category, 
-#product-button {
+#productButton {
     padding: 1rem 1.5rem;
     font-size: 1.5rem;
     border-radius: 0.5rem;
@@ -138,14 +118,67 @@ header > nav > a:hover {
     font-weight: 600;
 }
 
-#product-button:hover {
+.nameContent {grid-area: product;}
+
+#productName {width: 100%;}
+
+.amountContent {grid-area: amount;}
+
+#productAmount {
+    width: 100%;
+}
+
+.priceContent {
+    grid-area: unit;
+}
+
+#unitPrice {
+    width: 100%;
+}
+
+#category {
+    grid-area: category;
+}
+
+#productButton {
+    grid-area: button;
+
+    border: none;
+    color: var(--oil-black);
+    background-color: var(--purple-300);
+    font-weight: bold;
+}
+
+#productButton:hover {
     background-color: var(--purple-100);
     cursor: pointer;
 }
 
-.line {
-    background-color: var(--oil-black);
-    width: 1px;
+.amountContent, .priceContent {
+    width: 20rem;
+}
+
+/* CONTROLE DE ERROS */
+.contentError {
+    border: 3px solid var(--error-red);
+    border-radius: 1rem;
+    z-index: 1;
+}
+
+.errorMessage {
+    display: flex;
+    justify-content: center;
+    visibility: hidden;
+}
+
+.active {
+    visibility: visible;
+    display: flex;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-top: 3rem;
+    color: var(--error-red);
+    font-weight: bold;
 }
 
 .products-table {
@@ -173,11 +206,11 @@ td {
     padding: 1rem 1.5rem;
 }
 
-#th-code {
+.thCode {
     border-left: none;
 }
 
-#td-button {
+.tdButton {
     padding: .8rem 1.8rem;
     font-size: 1.4rem;
     border-radius: 1rem;
@@ -187,34 +220,17 @@ td {
     font-weight: 700;
 }
 
-#td-button:hover {
+.tdButton:hover {
     background-color: var(--purple-100);
     cursor: pointer;
 }
 
-#first-td {
+.firstTd {
     border-left: none;
 }
 
-#last-td {
+.lastTd {
     border-right: none;
-}
-
-#first-empty-td {
-    border-bottom: none;
-    border-left: none;
-}
-
-#empty-td {
-    border-bottom: none;
-}
-
-#last-empty-td {
-    border-bottom: none;
-}
-
-#lastTdButton {
-    visibility: hidden;
 }
 
 footer {
