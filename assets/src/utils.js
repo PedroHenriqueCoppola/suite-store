@@ -20,6 +20,26 @@ function getCodeFromLocalStorage(key) {
     return parseInt(localStorage.getItem(key));
 }
 
+function getCorrectIntToSave(inputvalue) {
+    return parseInt(inputvalue);
+}
+
+function getCorrectFloatToSave(inputValue) {
+    return parseFloat(inputValue).toFixed(2);
+}
+
 function validateInputSpaces(inputName) {
     return inputName.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/^\s+|\s+$/g,"").trim();
+}
+
+function limitTextInput(inputValue) {
+    const textRegex = new RegExp(
+        /[a-zA-Z]/
+    );
+
+    if(textRegex.test(inputValue)) {
+        return true;
+    }
+
+    return false;
 }

@@ -28,38 +28,42 @@
             <section class="content">
                 <form id="addProductForm" method="post">
                     <div class="values">
-                        <select id="productName">
-                            <option>Rice</option>
+                        <select id="productSelect">
+                            <!-- <option>Rice</option>
                             <option>Beans</option>
                             <option>Pasta</option>
-                            <option>Meat</option>
+                            <option>Meat</option> -->
                         </select>
 
-                        <div id="amountContent">
+                        <div class="amountContent">
                             <input 
                                 type="number" 
-                                id="productAmount" 
-                                name="productAmount" 
+                                id="wishListAmount" 
+                                name="wishListAmount" 
                                 placeholder="Amount"
                                 min="1"
                             />
                         </div>
 
-                        <input 
-                            type="text" 
-                            id="productTax" 
-                            name="productTax"
-                            placeholder="Tax" 
-                            disabled
-                        />
+                        <div class="taxContent">
+                            <input 
+                                type="text" 
+                                id="wishListTax" 
+                                name="wishListTax"
+                                placeholder="Tax" 
+                                disabled
+                            />
+                        </div>
                         
-                        <input 
-                            type="text" 
-                            id="productUnit" 
-                            name="productUnit" 
-                            placeholder="Price" 
-                            disabled
-                        />
+                        <div class="priceContent">
+                            <input 
+                                type="text" 
+                                id="wishListPrice" 
+                                name="wishListPrice" 
+                                placeholder="Price" 
+                                disabled
+                            />
+                        </div>
                         
                         <button id="productButton" type="submit">Add Product</button>
                     </div>
@@ -72,7 +76,7 @@
                 <div class="line"></div>
     
                 <div class="finalPrice">
-                    <table>
+                    <table id="finalPrice">
                         <thead>
                             <th class="thProduct">Product</th>
                             <th>Unit price</th>
@@ -80,36 +84,17 @@
                             <th>Total</th>
                         </thead>
         
-                        <tr>
-                            <td class="firstTd">Rice</td>
-                            <td>$20.00</td>
-                            <td>2</td>
-                            <td>40.00</td>
-                            <td class="lastTd">
-                                <button class="tdButton">Delete</button>
-                            </td>
-                        </tr>
-        
-                        <tr>
-                            <td class="firstTd">Beans</td>
-                            <td>$9.00</td>
-                            <td>1</td>
-                            <td>9.00</td>
-                            <td class="lastTd">
-                                <button class="tdButton">Delete</button>
-                            </td>
-                        </tr>
-
-                        <!-- teste de coluna vazia-->
-                        <tr>
-                            <td class="firstEmptyTd"></td>
-                            <td class="emptyTd"></td>
-                            <td class="emptyTd"></td>
-                            <td class="emptyTd"></td>
-                            <td class="lastEmptyTd">
-                                <button class="lastTdButton"></button>
-                            </td>
-                        </tr>
+                        <tbody>
+                            <tr>
+                                <td class="firstTd">Rice</td>
+                                <td>$20.00</td>
+                                <td>2</td>
+                                <td>40.00</td>
+                                <td class="lastTd">
+                                    <button class="tdButton">Delete</button>
+                                </td>
+                            </tr>
+                        </tbody>
                     </table>
         
                     <form id="finishForm">
@@ -138,6 +123,7 @@
             </footer>
         </div>
     </main>
+    <script src="assets/src/utils.js"></script>
     <script src="main.js"></script>
 </body>
 </html>

@@ -1,9 +1,10 @@
 const categoryCount = 'categoryCodeCount';
 const categoriesJson = 'categories';
+const productsJson = 'products';
+const productsList = getObjectFromLocalStorage(productsJson);
 
 const newCategoryForm = document.getElementById("newCategoryForm");
 const categoryName = document.getElementById("categoryName");
-const categoryNameValue = document.getElementById("categoryName").value;
 const tax = document.getElementById("tax");
 
 let isSubmitting = false; // controle para evitar múltiplos submits
@@ -38,16 +39,17 @@ newCategoryForm.addEventListener('submit', e => {
 });
 
 function checkCategoryNameAndTaxInput(){
-    const name = validateInputSpaces(document.getElementById("categoryName").value);
+    const categoryNameValue = validateInputSpaces(document.getElementById("categoryName").value);
+    const taxValue = tax.value;
 
-    if(name == "" && tax.value == "") {
+    if(categoryNameValue == "" && taxValue == "") {
         inputError(categoryName);
         inputError(tax);
         return false;
-    } else if(name == "" && tax.value != "") {
+    } else if(categoryNameValue == "" && taxValue != "") {
         inputError(categoryName);
         return false;
-    } else if(name != "" && tax.value == "") {
+    } else if(categoryNameValue != "" && taxValue == "") {
         inputError(tax);
         return false;
     } else {
@@ -56,26 +58,26 @@ function checkCategoryNameAndTaxInput(){
     }
 
     // limita o nome da categoria a 25 caracteres
-    if(name.length > 25) {
+    if(categoryNameValue.length > 25) {
         alert("The max name length is 25 characters.");
         return false;
     }
 
     // não permitir números nem caracteres especiais
-    if(!limitTextInput(name)) {
-        alert("No numbers or special characters allowed on 'Category name'.")
+    if(!limitTextInput(categoryNameValue)) {
+        alert("Please, start with and letter on 'Category name'.")
         return false;
     }
 
     // validar nomes iguais
-    if (findExistentCategoryName(name)) {
-        alert("This name already exists.");
+    if (findExistentCategoryName(categoryNameValue)) {
+        alert("This name already exists.");        
         return false;
     }
 
-    // validação do número entre 1 e 99,9
-    if((tax.value) > 100 || tax.value <= 0 || isNaN(tax.value)) {
-        alert("Please, insert an number between 1 and 99.9.")
+    // validação do número entre 1 e 100
+    if((taxValue) > 100 || taxValue <= 0 || isNaN(taxValue)) {
+        alert("Please, insert an number between 1 and 100")
         return false;
     } 
 }
@@ -83,35 +85,16 @@ function checkCategoryNameAndTaxInput(){
 function findExistentCategoryName(name) {
     const categoriesList = getObjectFromLocalStorage(categoriesJson);
     const category = categoriesList.filter(element => element.categoryName == name);
-    console.log(category)
     return category[0];
 }
 
-function limitTextInput(inputValue) {
-    const textRegex = new RegExp(
-        /[a-zA-Z]/
-    );
-
-    if(textRegex.test(inputValue)) {
-        return true;
-    }
-
-    return false;
-}
-
-function getCorrectTaxToSave(taxValue) {
-    return parseFloat(taxValue).toFixed(2);
-}
-
 function addNewCategory() {
-    if(checkCategoryNameAndTaxInput() == false) {
-        // pass
-    } else {
+    if(checkCategoryNameAndTaxInput() != false) {
         const categories = getObjectFromLocalStorage(categoriesJson);
 
         const name = validateInputSpaces(document.getElementById("categoryName").value);
 
-        const taxToSave = getCorrectTaxToSave(document.getElementById("tax").value);
+        const taxToSave = getCorrectFloatToSave(document.getElementById("tax").value);
 
         var category = { 
             code: getValidCategoryId(),
@@ -176,13 +159,23 @@ function loadCategories() {
     });
 }
 
+function checkIfProductExistsInCategory(name) {
+    return productsList.some(product => product.category == name);
+}
+
 function deleteCategory(categoryId) {
     let categories = getObjectFromLocalStorage(categoriesJson);
+    const categoryThatWillBeDeleted = categories.find(category => category.code == categoryId);
 
-    categories = categories.filter(category => category.code != categoryId);
-    localStorage.setItem('categories', JSON.stringify(categories));
-    
-    loadCategories();
+    if (checkIfProductExistsInCategory(categoryThatWillBeDeleted.categoryName)) {
+        alert("You can't delete this category. There are products with it. Please, delete the products first.")
+    } else {
+        let categories = getObjectFromLocalStorage(categoriesJson);
+        categories = categories.filter(category => category.code != categoryId);
+        localStorage.setItem('categories', JSON.stringify(categories));
+        
+        loadCategories();
+    }  
 }
 
 function updateCodeInLocalStorage(codeCount) {

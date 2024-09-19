@@ -43,29 +43,84 @@ if (categories) {
     });
 }
 
-// FUNÇÃO COM TODAS AS VALIDAÇÕES
-function checks() {
-    const name = validateInputSpaces(document.getElementById("productName").value);
+function checkNameAmountAndPriceInput() {
+    const productNameValue = validateInputSpaces(document.getElementById("productName").value);
+    const productAmountValue = productAmount.value;
+    const unitPriceValue = unitPrice.value;
 
-    if(name == "" && aaaaaaa) {
+    if(productNameValue == "" && productAmountValue == "" && unitPriceValue == "") {
+        inputError(productName);
+        inputError(productAmount);
+        inputError(unitPrice);
+        return false;
+    } else if (productNameValue == "" && productAmountValue == "") {
+        inputError(productName);
+        inputError(productAmount);
+        return false;
+    } else if (productNameValue == "" && unitPriceValue == "") {
+        inputError(productName);
+        inputError(unitPrice);
+        return false;
+    } else if (productAmountValue == "" && unitPriceValue == "") {
+        inputError(productAmount);
+        inputError(unitPrice);
+        return false;
+    } else if (productNameValue == "") {
+        inputError(productName);
+        return false;
+    } else if (productAmountValue == "") {
+        inputError(productAmount);
+        return false;
+    } else if (unitPriceValue == "") {
+        inputError(unitPrice);
+        return false;
+    } else {
+        removeInputError(productName);
+        removeInputError(productAmount);
+        removeInputError(unitPrice);
     }
+
+    if(productNameValue.length > 35) {
+        alert("The max name length is 35 characters.");
+        return false;
+    }
+
+    if(!limitTextInput(productNameValue)) {
+        alert("Please, start with and letter on 'Category name'.")
+        return false;
+    }
+
+    if (findExistentProductName(productNameValue)) {
+        alert("This name already exists.");
+        return false;
+    }
+
+    if((productAmountValue) > 10000 || productAmountValue <= 0 || isNaN(productAmountValue)) {
+        alert("Please, insert an number between 1 and 10.000.")
+        return false;
+    } 
+
+    if((unitPriceValue) > 10000 || unitPriceValue <= 0 || isNaN(unitPriceValue)) {
+        alert("Please, insert an number between 1 and 10.000.")
+        return false;
+    } 
 }
 
-function getCorrectUnitPriceToSave(inputValue) {
-    return parseFloat(inputValue).toFixed(2);
+function findExistentProductName(name) {
+    const productsList = getObjectFromLocalStorage(productsJson);
+    const product = productsList.filter(element => element.productName == name);
+    return product[0];
 }
 
 function addNewProductToTheRegister() {
-    if(checks() == false) {
-        // pass
-    } else {
+    if(checkNameAmountAndPriceInput() != false) {
         const products = getObjectFromLocalStorage(productsJson);
 
         const name = validateInputSpaces(document.getElementById("productName").value);
 
-        const amount = validateInputSpaces(document.getElementById("productAmount").value);
+        const amount = getCorrectIntToSave(document.getElementById("productAmount").value);
 
-        const unitPriceToSave = getCorrectUnitPriceToSave(document.getElementById("unitPrice").value);
+        const unitPriceToSave = getCorrectFloatToSave(document.getElementById("unitPrice").value);
 
         var option = category.children[category.selectedIndex];
         var categoryText = option.textContent;
