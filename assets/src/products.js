@@ -37,14 +37,14 @@ if (categories) {
     categories.forEach(el => {
         const option = document.createElement("option");
         option.value = el.code;
-        option.textContent = el.categoryName;
+        option.textContent = el.name;
 
         category.append(option);
     });
 }
 
 function checkNameAmountAndPriceInput() {
-    const productNameValue = validateInputSpaces(document.getElementById("productName").value);
+    const productNameValue = validateInputSpacesAndCapitalize(document.getElementById("productName").value);
     const productAmountValue = productAmount.value;
     const unitPriceValue = unitPrice.value;
 
@@ -108,7 +108,7 @@ function checkNameAmountAndPriceInput() {
 
 function findExistentProductName(name) {
     const productsList = getObjectFromLocalStorage(productsJson);
-    const product = productsList.filter(element => element.productName == name);
+    const product = productsList.filter(element => element.name == name);
     return product[0];
 }
 
@@ -116,21 +116,21 @@ function addNewProductToTheRegister() {
     if(checkNameAmountAndPriceInput() != false) {
         const products = getObjectFromLocalStorage(productsJson);
 
-        const name = validateInputSpaces(document.getElementById("productName").value);
+        const name = validateInputSpacesAndCapitalize(document.getElementById("productName").value);
 
         const amount = getCorrectIntToSave(document.getElementById("productAmount").value);
 
         const unitPriceToSave = getCorrectFloatToSave(document.getElementById("unitPrice").value);
 
-        var option = category.children[category.selectedIndex];
-        var categoryText = option.textContent;
+        // const categoryCode = parseInt(category.value)
+        const categoryCode = category.value;
 
         var product = { 
             code: getValidProductId(),
-            productName: name,
+            name: name,
             amount: amount,
             unitPrice: unitPriceToSave,
-            category: categoryText
+            category: categoryCode
         };
         
         products.push(product);
@@ -138,6 +138,11 @@ function addNewProductToTheRegister() {
 
         loadProducts();
     }
+}
+
+function getCategoryNameFromTheCode(categoryCode) {
+    const returnCategoryCode = categories.find(element => element.code == categoryCode);
+    return returnCategoryCode.name;
 }
 
 function loadProducts() {
@@ -156,7 +161,7 @@ function loadProducts() {
         codeTd.classList.add('firstTd');
 
         const productNameTd = document.createElement('td');
-        productNameTd.textContent = p.productName;
+        productNameTd.textContent = p.name;
 
         const productAmountTd = document.createElement('td');
         productAmountTd.textContent = p.amount;
@@ -165,7 +170,7 @@ function loadProducts() {
         unitPriceTd.textContent = p.unitPrice;
 
         const categoryTd = document.createElement('td');
-        categoryTd.textContent = p.category;
+        categoryTd.textContent = getCategoryNameFromTheCode(p.category);
 
         const deleteButtonTd = document.createElement('td');
         deleteButtonTd.classList.add('lastTd');
@@ -198,12 +203,14 @@ function loadProducts() {
 }
 
 function deleteProduct(productId) {
-    let products = getObjectFromLocalStorage(productsJson);
+    if(confirm("Are you sure you want to delete this product?")) {
+        let products = getObjectFromLocalStorage(productsJson);
 
-    products = products.filter(product => product.code != productId);
-    localStorage.setItem('products', JSON.stringify(products));
-    
-    loadProducts();
+        products = products.filter(product => product.code != productId);
+        localStorage.setItem('products', JSON.stringify(products));
+        
+        loadProducts();
+    }
 }
 
 function updateCodeInLocalStorage(codeCount) {

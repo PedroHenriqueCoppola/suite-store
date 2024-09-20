@@ -2,9 +2,11 @@ const categoryCount = 'categoryCodeCount';
 const categoriesJson = 'categories';
 const productsJson = 'products';
 const productsList = getObjectFromLocalStorage(productsJson);
+const categoriesList = getObjectFromLocalStorage(categoriesJson);
 
 const newCategoryForm = document.getElementById("newCategoryForm");
 const categoryName = document.getElementById("categoryName");
+const categoryNameValue = categoryName.value;
 const tax = document.getElementById("tax");
 
 let isSubmitting = false; // controle para evitar múltiplos submits
@@ -39,7 +41,7 @@ newCategoryForm.addEventListener('submit', e => {
 });
 
 function checkCategoryNameAndTaxInput(){
-    const categoryNameValue = validateInputSpaces(document.getElementById("categoryName").value);
+    const categoryNameValue = validateInputSpacesAndCapitalize(document.getElementById("categoryName").value);
     const taxValue = tax.value;
 
     if(categoryNameValue == "" && taxValue == "") {
@@ -57,9 +59,9 @@ function checkCategoryNameAndTaxInput(){
         removeInputError(tax);
     }
 
-    // limita o nome da categoria a 25 caracteres
-    if(categoryNameValue.length > 25) {
-        alert("The max name length is 25 characters.");
+    // limita o nome da categoria a 30 caracteres
+    if(categoryNameValue.length > 30) {
+        alert("The max name length is 30 characters.");
         return false;
     }
 
@@ -84,7 +86,7 @@ function checkCategoryNameAndTaxInput(){
 
 function findExistentCategoryName(name) {
     const categoriesList = getObjectFromLocalStorage(categoriesJson);
-    const category = categoriesList.filter(element => element.categoryName == name);
+    const category = categoriesList.filter(element => element.name == name);
     return category[0];
 }
 
@@ -92,13 +94,13 @@ function addNewCategory() {
     if(checkCategoryNameAndTaxInput() != false) {
         const categories = getObjectFromLocalStorage(categoriesJson);
 
-        const name = validateInputSpaces(document.getElementById("categoryName").value);
+        const name = validateInputSpacesAndCapitalize(document.getElementById("categoryName").value);
 
         const taxToSave = getCorrectFloatToSave(document.getElementById("tax").value);
 
         var category = { 
             code: getValidCategoryId(),
-            categoryName: name,
+            name: name,
             tax: taxToSave
         };
         
@@ -125,7 +127,7 @@ function loadCategories() {
         codeTd.classList.add('firstTd');
 
         const categoryNameTd = document.createElement('td');
-        categoryNameTd.textContent = c.categoryName;
+        categoryNameTd.textContent = c.name;
 
         const taxTd = document.createElement('td');
         taxTd.textContent = c.tax + "%";
@@ -159,22 +161,21 @@ function loadCategories() {
     });
 }
 
-function checkIfProductExistsInCategory(name) {
-    return productsList.some(product => product.category == name);
-}
+function deleteCategory(categoryCode) {
+    const productsBelongingTargetCategory = productsList.map(product => product.categoryCode == categoryCode);
+    console.log(productsBelongingTargetCategory)
+    console.log(productsBelongingTargetCategory.length)
 
-function deleteCategory(categoryId) {
-    let categories = getObjectFromLocalStorage(categoriesJson);
-    const categoryThatWillBeDeleted = categories.find(category => category.code == categoryId);
-
-    if (checkIfProductExistsInCategory(categoryThatWillBeDeleted.categoryName)) {
+    if (productsBelongingTargetCategory.length >= 1) {
         alert("You can't delete this category. There are products with it. Please, delete the products first.")
     } else {
-        let categories = getObjectFromLocalStorage(categoriesJson);
-        categories = categories.filter(category => category.code != categoryId);
-        localStorage.setItem('categories', JSON.stringify(categories));
-        
-        loadCategories();
+        if(confirm("Are you sure you want to delete this category?")) {
+            let categories = getObjectFromLocalStorage(categoriesJson);
+            categories = categories.filter(category => category.code != categoryCode);
+            localStorage.setItem('categories', JSON.stringify(categories));
+            
+            loadCategories();
+        }
     }  
 }
 
