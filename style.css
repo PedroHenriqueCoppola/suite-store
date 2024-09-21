@@ -1,6 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
 @import url("assets/css/global.css");
 
+:root {
+    --cancel-button: hsl(0, 2%, 88%);
+    --cancel-button-darker: hsl(0, 0%, 81%);
+}
+
 .taxes {
     cursor: default;
 }
@@ -146,6 +151,10 @@ td {
     font-size: 1.6rem;
     display: flex;
     gap: 2rem;
+}
+
+.cancel {
+    color: var(--cancel-button-darker);
 }
 
 .finish {

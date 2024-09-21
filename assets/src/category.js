@@ -67,7 +67,7 @@ function checkCategoryNameAndTaxInput(){
 
     // não permitir números nem caracteres especiais
     if(!limitTextInput(categoryNameValue)) {
-        alert("Please, start with and letter on 'Category name'.")
+        alert("Special characters are not allowed.")
         return false;
     }
 

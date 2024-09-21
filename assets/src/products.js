@@ -47,6 +47,8 @@ function checkNameAmountAndPriceInput() {
     const productNameValue = validateInputSpacesAndCapitalize(document.getElementById("productName").value);
     const productAmountValue = productAmount.value;
     const unitPriceValue = unitPrice.value;
+    const categoryValue = category.value;
+    console.log(categoryValue);
 
     if(productNameValue == "" && productAmountValue == "" && unitPriceValue == "") {
         inputError(productName);
@@ -86,7 +88,7 @@ function checkNameAmountAndPriceInput() {
     }
 
     if(!limitTextInput(productNameValue)) {
-        alert("Please, start with and letter on 'Category name'.")
+        alert("Please, start with and letter on 'Category name'.");
         return false;
     }
 
@@ -96,14 +98,19 @@ function checkNameAmountAndPriceInput() {
     }
 
     if((productAmountValue) > 10000 || productAmountValue <= 0 || isNaN(productAmountValue)) {
-        alert("Please, insert an number between 1 and 10.000.")
+        alert("Please, insert an number between 1 and 10.000.");
         return false;
     } 
 
     if((unitPriceValue) > 10000 || unitPriceValue <= 0 || isNaN(unitPriceValue)) {
-        alert("Please, insert an number between 1 and 10.000.")
+        alert("Please, insert an number between 1 and 10.000.");
         return false;
-    } 
+    }
+
+    if (categoryValue == "") {
+        alert("Please, create an category first.");
+        return false;
+    }
 }
 
 function findExistentProductName(name) {

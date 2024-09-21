@@ -82,6 +82,23 @@ header > nav > a:hover {
     color: var(--purple-100);
 }
 
+#categoryButton,
+#productButton,
+#productButton,
+.cancel,
+.finish {
+    transition-property: transform;
+    transition-duration: 0.4s;
+}
+
+#categoryButton:hover,
+#productButton:hover,
+#productButton:hover,
+.cancel:hover,
+.finish:hover {
+    transform: scale(1.05)
+}
+
 /* CONTROLE DE ERROS */
 .contentError {
     border: 3px solid var(--error-red);
