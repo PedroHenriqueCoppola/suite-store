@@ -2,11 +2,10 @@ const purchaseCount = 'purchaseCodeCount';
 const purchasesJson = 'purchases'
 
 const products = getObjectFromLocalStorage('products');
-console.log(products)
 
 const addProductForm = document.getElementById("addProductForm");
 const productSelect = document.getElementById("productSelect");
-const productAmount = document.getElementById("productAmount");
+const purchaseAmount = document.getElementById("purchaseAmount");
 const product = document.getElementById("productSelect");
 
 window.onload = function() {
@@ -47,34 +46,55 @@ function checkPurchaseInputs() {
     return true;
 }
 
-function getTextByProductId(productCode) {
-    const getText = products.find(element => element.code == productCode);
-    return getText;
+// busca um produto no array products com base no código fornecido (productCode)
+// function getProductDetailsById(productCode) {
+//     const getDetails = products.find(element => element.code == productCode);
+//     return getDetails;
+// } 
+
+function getCategoryAndProductById(productCode) {
+    const categories = getObjectFromLocalStorage('categories'); // pega todas as categories em memória
+    const products = getObjectFromLocalStorage('products'); // pega todos os products em memória
+
+    const product = products.find(p => p.code == productCode); // pegando o product pelo id
+
+    const category = categories.find(cat => cat.code == product.category); // pega a category correspondente ao id armazenado no produto
+
+    return { category, product };
 }
 
 function addNewPurchase() {
-    if(checkPurchaseInputs() != false) {
+    if (checkPurchaseInputs() !== false) {
         const purchases = getObjectFromLocalStorage(purchasesJson);
-
-        // const select = document.getElementById("productSelect");
-        // const option = select.children[select.selectedIndex];
-        // const name = validateInputSpacesAndCapitalize(option.textContent);
-
-        // const amount = getCorrectIntToSave(document.getElementById("purchaseAmount").value);
-
-        // const tax = getCorrectFloatToSave(document.getElementById("purchaseTax").value);
-        // tem que ser a variavel que ja vai ter a conta completa, não o valor do input (ele ta disabled)
-
-        const price = getCorrectFloatToSave(document.getElementById("purchasePrice").value);
-        // tem que ser a variavel que ja vai ter a conta completa, não o valor do input (ele ta disabled)
-
-        var purchase = { 
-            code: getValidPurchaseId(),
-            totalPrice: price,
-            finalTax: finalTax,
-            products: []
-        }
         
+        const productCode = productSelect.value; // pega o código do produto que ta sendo selecionado
+
+        const result = getCategoryAndProductById(productCode);
+        const { category, product } = result; // desestruturando pra ter a categoria e o produto
+
+        const purchaseAmountValue = purchaseAmount.value;
+        const amount = parseInt(purchaseAmountValue); // retorna o amount selecionado
+        const price = product.unitPrice * amount; // pega o preço unitário e calcula o preço total com o amount
+
+        const finalTax = category.tax * amount;
+
+        // criando o objeto que vai dentro do objeto purchase
+        const productInPurchase = {
+            id: product.code,
+            name: product.name,
+            unitPrice: product.unitPrice,
+            tax: category.tax,
+            amount: amount,
+            totalPrice: price + finalTax
+        };
+
+        const purchase = {
+            code: getValidPurchaseId(),
+            totalPrice: price + finalTax,
+            finalTax: finalTax,
+            products: [productInPurchase] // coloca o array de products dentro do purchase
+        };
+
         purchases.push(purchase);
         localStorage.setItem('purchases', JSON.stringify(purchases));
 
@@ -83,56 +103,58 @@ function addNewPurchase() {
 }
 
 function loadPurchases() {
-    const tbody = document.querySelector('#purchaseTable tbody'); 
+    const tbody = document.querySelector('#purchaseTable tbody');
     tbody.innerHTML = ''; // serve pra limpar o corpo da tabela antes de carregar
-    
+
     const purchases = getObjectFromLocalStorage(purchasesJson);
 
-    purchases.forEach(p => {
-        // nova linha
-        const row = document.createElement('tr');
-        
-        // cria as td pra productSelect, productAmount, finalTax e totalPrice
-        const productSelectTd = document.createElement('td');
-        productSelectTd.textContent = products.code;
-        productSelectTd.classList.add('firstTd');
-        productSelectTd.id = p.productId;
+    purchases.forEach(purchase => {
+        // pra cada produto na lista de produtos da compra
+        purchase.products.forEach(product => {
+            // nova linha
+            const row = document.createElement('tr');
 
-        const unitPriceTd = document.createElement('td');
-        unitPriceTd.textContent = products.unitPrice;
+             // cria as td pra productSelect, unitPrice, productAmount, totalPrice e btton
+            const productSelectTd = document.createElement('td');
+            productSelectTd.textContent = product.name;
+            productSelectTd.classList.add('firstTd');
+            
+            const unitPriceTd = document.createElement('td');
+            unitPriceTd.textContent = getCorrectFloatToSave(product.unitPrice);
 
-        const productAmountTd = document.createElement('td');
-        productAmountTd.textContent = products.amount;
+            const productAmountTd = document.createElement('td');
+            productAmountTd.textContent = product.amount;
 
-        const totalPriceTd = document.createElement('td');
-        totalPriceTd.textContent = p.price;
+            const totalPriceTd = document.createElement('td');
+            totalPriceTd.textContent = getCorrectFloatToSave(product.totalPrice);
 
-        const deleteButtonTd = document.createElement('td');
-        deleteButtonTd.classList.add('lastTd');
+            const deleteButtonTd = document.createElement('td');
+            deleteButtonTd.classList.add('lastTd');
 
-        // cria o botão de delete
-        const deleteButton = document.createElement('button');
-        deleteButton.textContent = 'Delete';
-        deleteButton.classList.add('tdButton');
-        deleteButton.id = p.code;
+            // cria o botão de delete
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Delete';
+            deleteButton.classList.add('tdButton');
+            deleteButton.id = purchase.code;
 
-        // adiciona o onclick
-        deleteButton.onclick = function() {
-            deleteLine(this.id);
-        };
+            // adiciona o onclick
+            deleteButton.onclick = function() {
+                deleteLine(this.id);
+            };
 
-        // adiciona o botão ao td
-        deleteButtonTd.appendChild(deleteButton);
-        
-        // adiciona as células aos respectivos tds
-        row.appendChild(productSelectTd);
-        row.appendChild(unitPriceTd);
-        row.appendChild(productAmountTd);
-        row.appendChild(totalPriceTd);
-        row.appendChild(deleteButtonTd);
-        
-        // adiciona a linha na tabela
-        tbody.appendChild(row);
+            // adiciona o botão ao td
+            deleteButtonTd.appendChild(deleteButton);
+
+            // adiciona as células aos respectivos tds
+            row.appendChild(productSelectTd);
+            row.appendChild(unitPriceTd);
+            row.appendChild(productAmountTd);
+            row.appendChild(totalPriceTd);
+            row.appendChild(deleteButtonTd);
+
+            // adiciona a linha na tabela
+            tbody.appendChild(row);
+        });
     });
 }
 
