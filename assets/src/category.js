@@ -12,8 +12,8 @@ const tax = document.getElementById("tax");
 let isSubmitting = false; // controle para evitar múltiplos submits
 
 window.onload = function() {
-    initCategories();
     initCategoryCodeCount();
+    initCategories();
     loadCategories();
 };
 
@@ -146,7 +146,7 @@ function loadCategories() {
         deleteButton.onclick = function() {
             deleteCategory(this.id);
         };
-        
+
         // adiciona o botão ao td
         deleteTd.appendChild(deleteButton);
         
@@ -163,7 +163,6 @@ function loadCategories() {
 
 function deleteCategory(categoryCode) {
     const productsBelongingTargetCategory = productsList.map(product => product.categoryCode == categoryCode);
-    console.log(productsBelongingTargetCategory)
     console.log(productsBelongingTargetCategory.length)
 
     if (productsBelongingTargetCategory.length >= 1) {

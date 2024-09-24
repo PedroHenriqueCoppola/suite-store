@@ -29,9 +29,9 @@
 }
 
 #productSelect,
-#wishListAmount,
-#wishListTax,
-#wishListPrice, 
+#purchaseAmount,
+#purchaseTax,
+#purchasePrice, 
 #productButton {
     padding: 1rem 1.5rem;
     font-size: 1.5rem;
@@ -55,7 +55,7 @@
     grid-area: taxValue;
 }
 
-#wishListTax {
+#purchaseTax {
     background-color: var(--input-cancelled);
 }
 
@@ -63,7 +63,7 @@
     grid-area: unitPrice;
 }
 
-#wishListPrice {
+#purchasePrice {
     background-color: var(--input-cancelled);
 }
 

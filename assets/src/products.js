@@ -9,12 +9,6 @@ const productAmount = document.getElementById("productAmount");
 const unitPrice = document.getElementById("unitPrice");
 const category = document.getElementById("category");
 
-window.onload = function() {
-    initProductsCodeCount();
-    initProducts();
-    loadProducts();
-}
-
 function initProducts() {
     if (!localStorage.getItem('products')) {
         localStorage.setItem('products', JSON.stringify([])); // inicia o localstorage
@@ -25,6 +19,12 @@ function initProductsCodeCount() {
     if(!localStorage.getItem(productCount)) {
         localStorage.setItem(productCount, 1);
     }
+}
+
+window.onload = function() {
+    initProductsCodeCount();
+    initProducts();
+    loadProducts();
 }
 
 newProductForm.addEventListener('submit', e => {
@@ -48,7 +48,6 @@ function checkNameAmountAndPriceInput() {
     const productAmountValue = productAmount.value;
     const unitPriceValue = unitPrice.value;
     const categoryValue = category.value;
-    console.log(categoryValue);
 
     if(productNameValue == "" && productAmountValue == "" && unitPriceValue == "") {
         inputError(productName);
@@ -192,7 +191,7 @@ function loadProducts() {
         deleteButton.onclick = function() {
             deleteProduct(this.id);
         };
-        
+
         // adiciona o botão ao td
         deleteButtonTd.appendChild(deleteButton);
         
