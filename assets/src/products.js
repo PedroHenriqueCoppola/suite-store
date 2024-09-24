@@ -44,21 +44,21 @@ if (categories) {
 }
 
 function checkNameAmountAndPriceInput() {
-    const productNameValue = validateInputSpacesAndCapitalize(document.getElementById("productName").value);
+    const nameValue = validateInputSpacesAndCapitalize(document.getElementById("productName").value);
     const productAmountValue = productAmount.value;
     const unitPriceValue = unitPrice.value;
     const categoryValue = category.value;
 
-    if(productNameValue == "" && productAmountValue == "" && unitPriceValue == "") {
+    if(nameValue == "" && productAmountValue == "" && unitPriceValue == "") {
         inputError(productName);
         inputError(productAmount);
         inputError(unitPrice);
         return false;
-    } else if (productNameValue == "" && productAmountValue == "") {
+    } else if (nameValue == "" && productAmountValue == "") {
         inputError(productName);
         inputError(productAmount);
         return false;
-    } else if (productNameValue == "" && unitPriceValue == "") {
+    } else if (nameValue == "" && unitPriceValue == "") {
         inputError(productName);
         inputError(unitPrice);
         return false;
@@ -66,7 +66,7 @@ function checkNameAmountAndPriceInput() {
         inputError(productAmount);
         inputError(unitPrice);
         return false;
-    } else if (productNameValue == "") {
+    } else if (nameValue == "") {
         inputError(productName);
         return false;
     } else if (productAmountValue == "") {
@@ -81,17 +81,17 @@ function checkNameAmountAndPriceInput() {
         removeInputError(unitPrice);
     }
 
-    if(productNameValue.length > 35) {
+    if(nameValue.length > 35) {
         alert("The max name length is 35 characters.");
         return false;
     }
 
-    if(!limitTextInput(productNameValue)) {
-        alert("Please, start with and letter on 'Category name'.");
+    if(!limitTextInput(nameValue)) {
+        alert("Special characters are not allowed on 'Category name'.");
         return false;
     }
 
-    if (findExistentProductName(productNameValue)) {
+    if (findExistentProductName(nameValue)) {
         alert("This name already exists.");
         return false;
     }
@@ -148,7 +148,7 @@ function addNewProductToTheRegister() {
 
 function getCategoryNameFromTheCode(categoryCode) {
     const returnCategoryCode = categories.find(element => element.code == categoryCode);
-    return returnCategoryCode.name;
+    return returnCategoryCode.name
 }
 
 function loadProducts() {
@@ -215,7 +215,7 @@ function deleteProduct(productId) {
         products = products.filter(product => product.code != productId);
         localStorage.setItem('products', JSON.stringify(products));
         
-        loadProducts();
+        loadProducts()
     }
 }
 

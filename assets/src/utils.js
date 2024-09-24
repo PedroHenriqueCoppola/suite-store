@@ -29,7 +29,11 @@ function getCorrectFloatToSave(inputValue) {
 }
 
 function validateInputSpacesAndCapitalize(inputName) {
-    const normalName = inputName.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/^\s+|\s+$/g,"").trim();
+    const normalName = inputName
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/^\s+|\s+$/g, "")
+        .replace(/\s+/g, " ");
 
     // russo function 
     // str: string que vai ser modificada
@@ -40,7 +44,7 @@ function validateInputSpacesAndCapitalize(inputName) {
 
 function limitTextInput(inputValue) {
     // não permite que tenha nada além de letras em todo o input
-    const textRegex = /^[a-zA-Z]+$/;
+    const textRegex = /^[a-zA-Z\s]+$/;
 
-    return textRegex.test(inputValue);
+    return textRegex.test(inputValue)
 }

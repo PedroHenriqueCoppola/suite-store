@@ -5,13 +5,16 @@ const products = getObjectFromLocalStorage('products');
 
 const addProductForm = document.getElementById("addProductForm");
 const productSelect = document.getElementById("productSelect");
+const productCode = productSelect.value; // pega o código do produto que ta sendo selecionado
 const purchaseAmount = document.getElementById("purchaseAmount");
-const product = document.getElementById("productSelect");
+const purchaseTax = document.getElementById("purchaseTax");
+const purchasePrice = document.getElementById("purchasePrice");
 
 window.onload = function() {
     initPurchaseCodeCount();
     initPurchases();
     loadPurchases();
+    updateDisabledInputs();
 }
 
 function initPurchases() {
@@ -74,9 +77,12 @@ function addNewPurchase() {
 
         const purchaseAmountValue = purchaseAmount.value;
         const amount = parseInt(purchaseAmountValue); // retorna o amount selecionado
-        const price = product.unitPrice * amount; // pega o preço unitário e calcula o preço total com o amount
 
-        const finalTax = category.tax * amount;
+        const totalPrice = product.unitPrice * amount; // pega o preço unitário e calcula o preço total com o amount
+
+        const percentageTax = parseFloat(category.tax)/100
+        const finalTax = percentageTax * totalPrice;
+        console.log(finalTax)
 
         // criando o objeto que vai dentro do objeto purchase
         const productInPurchase = {
@@ -85,12 +91,12 @@ function addNewPurchase() {
             unitPrice: product.unitPrice,
             tax: category.tax,
             amount: amount,
-            totalPrice: price + finalTax
+            totalPrice: totalPrice + finalTax
         };
 
         const purchase = {
             code: getValidPurchaseId(),
-            totalPrice: price + finalTax,
+            totalPrice: totalPrice + finalTax,
             finalTax: finalTax,
             products: [productInPurchase] // coloca o array de products dentro do purchase
         };
@@ -193,4 +199,15 @@ function ensurePurchaseIdIsValid(code) {
         }
     }
     return true;
+}
+
+productSelect.addEventListener("change", updateDisabledInputs);
+
+function updateDisabledInputs() {
+    const productCode = productSelect.value;
+    const result = getCategoryAndProductById(productCode);
+    const { category, product } = result; // desestruturação do result pra obter a category e o product
+
+    purchaseTax.value = ("Tax: " + getCorrectFloatToSave(category.tax) + "%");
+    purchasePrice.value = ("Unit Price: " + getCorrectFloatToSave(product.unitPrice));
 }

@@ -41,38 +41,39 @@ newCategoryForm.addEventListener('submit', e => {
 });
 
 function checkCategoryNameAndTaxInput(){
-    const categoryNameValue = validateInputSpacesAndCapitalize(document.getElementById("categoryName").value);
+    const inputName = document.getElementById("categoryName");
+    const nameValue = validateInputSpacesAndCapitalize(document.getElementById("categoryName").value);
     const taxValue = tax.value;
 
-    if(categoryNameValue == "" && taxValue == "") {
-        inputError(categoryName);
+    if(nameValue == "" && taxValue == "") {
+        inputError(inputName);
         inputError(tax);
         return false;
-    } else if(categoryNameValue == "" && taxValue != "") {
-        inputError(categoryName);
+    } else if(nameValue == "" && taxValue != "") {
+        inputError(inputName);
         return false;
-    } else if(categoryNameValue != "" && taxValue == "") {
+    } else if(nameValue != "" && taxValue == "") {
         inputError(tax);
         return false;
     } else {
-        removeInputError(categoryName);
+        removeInputError(inputName);
         removeInputError(tax);
     }
 
     // limita o nome da categoria a 30 caracteres
-    if(categoryNameValue.length > 30) {
+    if(nameValue.length > 30) {
         alert("The max name length is 30 characters.");
         return false;
     }
 
     // não permitir números nem caracteres especiais
-    if(!limitTextInput(categoryNameValue)) {
-        alert("Special characters are not allowed.")
+    if(!limitTextInput(nameValue)) {
+        alert("Special characters or numbers are not allowed for the name.")
         return false;
     }
 
     // validar nomes iguais
-    if (findExistentCategoryName(categoryNameValue)) {
+    if (findExistentCategoryName(nameValue)) {
         alert("This name already exists.");        
         return false;
     }
@@ -94,13 +95,13 @@ function addNewCategory() {
     if(checkCategoryNameAndTaxInput() != false) {
         const categories = getObjectFromLocalStorage(categoriesJson);
 
-        const name = validateInputSpacesAndCapitalize(document.getElementById("categoryName").value);
+        const name = document.getElementById("categoryName").value;
 
         const taxToSave = getCorrectFloatToSave(document.getElementById("tax").value);
 
         var category = { 
             code: getValidCategoryId(),
-            name: name,
+            name: validateInputSpacesAndCapitalize(name),
             tax: taxToSave
         };
         
@@ -162,10 +163,9 @@ function loadCategories() {
 }
 
 function deleteCategory(categoryCode) {
-    const productsBelongingTargetCategory = productsList.map(product => product.categoryCode == categoryCode);
-    console.log(productsBelongingTargetCategory.length)
+    const productsBelongingTargetCategory = productsList.map(product => product.category == categoryCode);
 
-    if (productsBelongingTargetCategory.length >= 1) {
+    if (productsBelongingTargetCategory[0] == true) {
         alert("You can't delete this category. There are products with it. Please, delete the products first.")
     } else {
         if(confirm("Are you sure you want to delete this category?")) {
@@ -202,4 +202,8 @@ function ensureCategoryIdIsValid(code) {
         }
     }
     return true;
+}
+
+function testing() {
+    
 }
