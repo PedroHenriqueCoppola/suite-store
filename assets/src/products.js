@@ -96,13 +96,13 @@ function checkNameAmountAndPriceInput() {
         return false;
     }
 
-    if((productAmountValue) > 10000 || productAmountValue <= 0 || isNaN(productAmountValue)) {
-        alert("Please, insert an number between 1 and 10.000.");
+    if((productAmountValue) > 100000 || productAmountValue <= 0 || isNaN(productAmountValue)) {
+        alert("Please, insert an number between 1 and 100.000.");
         return false;
     } 
 
-    if((unitPriceValue) > 10000 || unitPriceValue <= 0 || isNaN(unitPriceValue)) {
-        alert("Please, insert an number between 1 and 10.000.");
+    if((unitPriceValue) > 1000000 || unitPriceValue <= 0 || isNaN(unitPriceValue)) {
+        alert("Please, insert an number between 1 and 1.000.000.");
         return false;
     }
 
