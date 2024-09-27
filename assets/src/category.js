@@ -68,7 +68,7 @@ function checkCategoryNameAndTaxInput(){
 
     // não permitir números nem caracteres especiais
     if(!limitTextInput(nameValue)) {
-        alert("Special characters or numbers are not allowed for the name.")
+        alert("Special characters or numbers are not allowed for the name.");
         return false;
     }
 
@@ -80,7 +80,7 @@ function checkCategoryNameAndTaxInput(){
 
     // validação do número entre 1 e 100
     if((taxValue) > 100 || taxValue <= 0 || isNaN(taxValue)) {
-        alert("Please, insert an number between 1 and 100")
+        alert("Please, insert an number between 1 and 100");
         return false;
     } 
 }

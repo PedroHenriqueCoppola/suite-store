@@ -1,6 +1,8 @@
 const purchaseCount = 'purchaseCodeCount';
 const purchasesJson = 'purchases'
 
+// let purchases = getObjectFromLocalStorage('purchases');
+let purchases = getObjectFromLocalStorage(purchasesJson);
 const products = getObjectFromLocalStorage('products');
 
 const addProductForm = document.getElementById("addProductForm");
@@ -10,11 +12,18 @@ const purchaseAmount = document.getElementById("purchaseAmount");
 const purchaseTax = document.getElementById("purchaseTax");
 const purchasePrice = document.getElementById("purchasePrice");
 
+const showFinalTax = document.getElementById("showFinalTax");
+const showFinalPrice = document.getElementById("showFinalPrice");
+let taxes = 0;
+let prices = 0;
+
 window.onload = function() {
     initPurchaseCodeCount();
     initPurchases();
     loadPurchases();
     updateDisabledInputs();
+    reloadPrintTax();
+    reloadPrintPrice();
 }
 
 function initPurchases() {
@@ -46,18 +55,33 @@ if (products) {
 }
 
 function checkPurchaseInputs() {
-    return true;
-}
+    const amountValue = purchaseAmount.value;
+    let productCode = productSelect.value; // pega o código do produto que ta sendo selecionado
 
-// busca um produto no array products com base no código fornecido (productCode)
-// function getProductDetailsById(productCode) {
-//     const getDetails = products.find(element => element.code == productCode);
-//     return getDetails;
-// } 
+    const result = getCategoryAndProductById(productCode);
+    const { product } = result; 
+    
+    if (amountValue == "") {
+        inputError(purchaseAmount);
+        return false
+    } else {
+        removeInputError(purchaseAmount);
+    }
+
+    if(amountValue <= 0 || isNaN(amountValue)) {
+        alert("Please, insert an number bigger than 0.");
+        return false;
+    }
+
+    if(amountValue > product.amount) {
+        alert("You can't buy an amount bigger than the stock amount.");
+        return false;
+    }
+}
 
 function getCategoryAndProductById(productCode) {
     const categories = getObjectFromLocalStorage('categories'); // pega todas as categories em memória
-    const products = getObjectFromLocalStorage('products'); // pega todos os products em memória
+    // const products = getObjectFromLocalStorage('products'); // pega todos os products em memória
 
     const product = products.find(p => p.code == productCode); // pegando o product pelo id
 
@@ -68,9 +92,7 @@ function getCategoryAndProductById(productCode) {
 
 function addNewPurchase() {
     if (checkPurchaseInputs() !== false) {
-        const purchases = getObjectFromLocalStorage(purchasesJson);
-        
-        const productCode = productSelect.value; // pega o código do produto que ta sendo selecionado
+        let productCode = productSelect.value; // pega o código do produto que ta sendo selecionado
 
         const result = getCategoryAndProductById(productCode);
         const { category, product } = result; // desestruturando pra ter a categoria e o produto
@@ -82,7 +104,9 @@ function addNewPurchase() {
 
         const percentageTax = parseFloat(category.tax)/100
         const finalTax = percentageTax * totalPrice;
-        console.log(finalTax)
+
+        taxes += finalTax;
+        prices += totalPrice + finalTax;
 
         // criando o objeto que vai dentro do objeto purchase
         const productInPurchase = {
@@ -103,7 +127,13 @@ function addNewPurchase() {
 
         purchases.push(purchase);
         localStorage.setItem('purchases', JSON.stringify(purchases));
-
+        
+        product.amount -= amount;
+        localStorage.setItem('products', JSON.stringify(products));
+        purchaseAmount.title = `Number of products available: ${product.amount}`
+        
+        printFinalTax();
+        printFinalPrice();
         loadPurchases();
     }
 }
@@ -111,8 +141,6 @@ function addNewPurchase() {
 function loadPurchases() {
     const tbody = document.querySelector('#purchaseTable tbody');
     tbody.innerHTML = ''; // serve pra limpar o corpo da tabela antes de carregar
-
-    const purchases = getObjectFromLocalStorage(purchasesJson);
 
     purchases.forEach(purchase => {
         // pra cada produto na lista de produtos da compra
@@ -166,11 +194,24 @@ function loadPurchases() {
 
 function deleteLine(purchaseCode) {
     if(confirm("Are you sure you want to delete this product?")) {
-        let purchases = getObjectFromLocalStorage(purchasesJson);
+        taxes = 0;
+        prices = 0;
+        let productCode = productSelect.value;
+        const teste = purchases.find(e => e.code == purchaseCode);
+        const amount = parseInt(teste.products[0].amount);
+
+        const result = getCategoryAndProductById(productCode);
+        const { product } = result; // desestruturando pra ter o produto
+
+        product.amount += amount;
 
         purchases = purchases.filter(purchase => purchase.code != purchaseCode);
         localStorage.setItem('purchases', JSON.stringify(purchases));
+        localStorage.setItem('products', JSON.stringify(products));
+        purchaseAmount.title = `Number of products available: ${product.amount}`
         
+        reloadPrintTax();
+        reloadPrintPrice();
         loadPurchases();
     }
 }
@@ -191,8 +232,6 @@ function getValidPurchaseId() {
 }
 
 function ensurePurchaseIdIsValid(code) {
-    const purchases = getObjectFromLocalStorage(purchasesJson);
-
     for (let pur of purchases) {
         if (pur.code == code) {
             return false;
@@ -210,4 +249,26 @@ function updateDisabledInputs() {
 
     purchaseTax.value = ("Tax: " + getCorrectFloatToSave(category.tax) + "%");
     purchasePrice.value = ("Unit Price: " + getCorrectFloatToSave(product.unitPrice));
+}
+
+function printFinalTax() {
+    showFinalTax.textContent = ("$" + getCorrectFloatToSave(taxes));
+}
+
+function reloadPrintTax() {
+    purchases.forEach(product => {
+        taxes += product.finalTax
+    })
+    printFinalTax();
+}
+
+function printFinalPrice() {
+    showFinalPrice.textContent = ("$" + getCorrectFloatToSave(prices));
+}
+
+function reloadPrintPrice() {
+    purchases.forEach(product => {
+        prices += product.totalPrice
+    })
+    printFinalPrice();
 }

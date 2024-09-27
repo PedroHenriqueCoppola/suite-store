@@ -44,7 +44,7 @@ function validateInputSpacesAndCapitalize(inputName) {
 
 function limitTextInput(inputValue) {
     // não permite que tenha nada além de letras em todo o input
-    const textRegex = /^[a-zA-Z\s]+$/;
+    const textRegex = /^[a-zA-Z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ\s]+$/;
 
     return textRegex.test(inputValue)
 }

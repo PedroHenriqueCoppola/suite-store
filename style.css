@@ -12,8 +12,8 @@
 
 .content {
     display: flex;
-    padding: 4rem;
-    gap: 6rem;
+    padding: 6rem;
+    gap: 4rem;
     justify-content: center;
     background-color: var(--ghostwhite);
 }
