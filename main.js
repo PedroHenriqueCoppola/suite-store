@@ -6,12 +6,12 @@ let purchases = getObjectFromLocalStorage(purchasesJson);
 const products = getObjectFromLocalStorage('products');
 
 const addProductForm = document.getElementById("addProductForm");
+const finishForm = document.getElementById("finishForm");
 const productSelect = document.getElementById("productSelect");
 const productCode = productSelect.value; // pega o código do produto que ta sendo selecionado
 const purchaseAmount = document.getElementById("purchaseAmount");
 const purchaseTax = document.getElementById("purchaseTax");
 const purchasePrice = document.getElementById("purchasePrice");
-
 const showFinalTax = document.getElementById("showFinalTax");
 const showFinalPrice = document.getElementById("showFinalPrice");
 let taxes = 0;
