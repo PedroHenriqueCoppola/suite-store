@@ -203,7 +203,3 @@ function ensureCategoryIdIsValid(code) {
     }
     return true;
 }
-
-function testing() {
-    
-}
