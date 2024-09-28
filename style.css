@@ -153,11 +153,11 @@ td {
     gap: 2rem;
 }
 
-.cancel {
+#cancel {
     color: var(--cancel-button-darker);
 }
 
-.finish {
+#finish {
     margin-left: 2rem;
     margin-top: 2rem;
     padding: 1rem 5rem;
@@ -169,12 +169,12 @@ td {
     font-weight: 700;
 }
 
-.finish:hover {
+#finish:hover {
     background-color: var(--purple-100);
     cursor: pointer;
 }
 
-.cancel {
+#cancel {
     padding: 1rem 5rem;
     font-size: 1.4rem;
     border-radius: 1rem;
@@ -184,7 +184,7 @@ td {
     font-weight: 700;
 }
 
-.cancel:hover {
+#cancel:hover {
     background-color: var(--cancel-button-darker);
     cursor: pointer;
 }

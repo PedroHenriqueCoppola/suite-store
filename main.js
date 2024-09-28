@@ -1,26 +1,31 @@
-const purchaseCount = 'purchaseCodeCount';
+// const purchaseCount = 'purchaseCodeCount';
+const historyCount = 'historyCodeCount';
 const purchasesJson = 'purchases'
 
-// let purchases = getObjectFromLocalStorage('purchases');
 let purchases = getObjectFromLocalStorage(purchasesJson);
 const products = getObjectFromLocalStorage('products');
+const histories = getObjectFromLocalStorage('histories');
 
 const addProductForm = document.getElementById("addProductForm");
-const finishForm = document.getElementById("finishForm");
 const productSelect = document.getElementById("productSelect");
 const productCode = productSelect.value; // pega o código do produto que ta sendo selecionado
 const purchaseAmount = document.getElementById("purchaseAmount");
 const purchaseTax = document.getElementById("purchaseTax");
 const purchasePrice = document.getElementById("purchasePrice");
+
 const showFinalTax = document.getElementById("showFinalTax");
 const showFinalPrice = document.getElementById("showFinalPrice");
+const cancelButton = document.getElementById("cancel");
+const finishButton = document.getElementById("finish");
+
 let taxes = 0;
 let prices = 0;
 
 window.onload = function() {
-    initPurchaseCodeCount();
+    initHistoryCodeCount();
     initPurchases();
     loadPurchases();
+    initHistories();
     updateDisabledInputs();
     reloadPrintTax();
     reloadPrintPrice();
@@ -32,9 +37,21 @@ function initPurchases() {
     }
 }
 
-function initPurchaseCodeCount() {
-    if(!localStorage.getItem(purchaseCount)) {
-        localStorage.setItem(purchaseCount, 1);
+function initHistories() {
+    if (!localStorage.getItem('histories')) {
+        localStorage.setItem('histories', JSON.stringify([])); // inicia o localstorage
+    }
+}
+
+// function initPurchaseCodeCount() {
+//     if(!localStorage.getItem(purchaseCount)) {
+//         localStorage.setItem(purchaseCount, 1);
+//     }
+// }
+
+function initHistoryCodeCount() {
+    if(!localStorage.getItem(historyCount)) {
+        localStorage.setItem(historyCount, 1);
     }
 }
 
@@ -81,7 +98,6 @@ function checkPurchaseInputs() {
 
 function getCategoryAndProductById(productCode) {
     const categories = getObjectFromLocalStorage('categories'); // pega todas as categories em memória
-    // const products = getObjectFromLocalStorage('products'); // pega todos os products em memória
 
     const product = products.find(p => p.code == productCode); // pegando o product pelo id
 
@@ -90,42 +106,60 @@ function getCategoryAndProductById(productCode) {
     return { category, product };
 }
 
+function readCorrectContentOfHomeInputs() {
+    let productCode = productSelect.value; // pega o código do produto que ta sendo selecionado
+
+    const result = getCategoryAndProductById(productCode);
+    const { category, product } = result; // desestruturando pra ter a categoria e o produto
+
+    const purchaseAmountValue = purchaseAmount.value;
+    const amount = parseInt(purchaseAmountValue); // retorna o amount selecionado
+
+    const totalPrice = product.unitPrice * amount; // pega o preço unitário e calcula o preço total com o amount
+
+    const percentageTax = parseFloat(category.tax)/100;
+    const finalTax = percentageTax * totalPrice;
+
+    taxes += finalTax;
+    prices += totalPrice + finalTax;
+
+    const todayDate = new Date().toLocaleString();
+
+    const getFullPurchaseList = JSON.parse(localStorage.getItem('purchases'));
+
+    // criando o objeto que vai dentro do objeto purchase
+    const productInPurchase = {
+        id: product.code,
+        lineCode: getProductLineIndex(),
+        name: product.name,
+        unitPrice: product.unitPrice,
+        tax: category.tax,
+        finalTax: finalTax,
+        amount: amount,
+        totalPrice: totalPrice + finalTax
+    };
+
+    const purchase = {
+        // code: getValidPurchaseId(),
+        // totalPrice: totalPrice + finalTax,
+        products: productInPurchase // coloca o array de products dentro do purchase
+    };
+
+    const history = {
+        id: getValidHistoryId(),
+        date: todayDate,
+        purchase: getFullPurchaseList
+    }
+
+    return { product, amount, productInPurchase, purchase, history };
+}
+
 function addNewPurchase() {
     if (checkPurchaseInputs() !== false) {
-        let productCode = productSelect.value; // pega o código do produto que ta sendo selecionado
+        const inputsData = readCorrectContentOfHomeInputs();
+        const { product, amount, productInPurchase } = inputsData;
 
-        const result = getCategoryAndProductById(productCode);
-        const { category, product } = result; // desestruturando pra ter a categoria e o produto
-
-        const purchaseAmountValue = purchaseAmount.value;
-        const amount = parseInt(purchaseAmountValue); // retorna o amount selecionado
-
-        const totalPrice = product.unitPrice * amount; // pega o preço unitário e calcula o preço total com o amount
-
-        const percentageTax = parseFloat(category.tax)/100
-        const finalTax = percentageTax * totalPrice;
-
-        taxes += finalTax;
-        prices += totalPrice + finalTax;
-
-        // criando o objeto que vai dentro do objeto purchase
-        const productInPurchase = {
-            id: product.code,
-            name: product.name,
-            unitPrice: product.unitPrice,
-            tax: category.tax,
-            amount: amount,
-            totalPrice: totalPrice + finalTax
-        };
-
-        const purchase = {
-            code: getValidPurchaseId(),
-            totalPrice: totalPrice + finalTax,
-            finalTax: finalTax,
-            products: [productInPurchase] // coloca o array de products dentro do purchase
-        };
-
-        purchases.push(purchase);
+        purchases.push(productInPurchase);
         localStorage.setItem('purchases', JSON.stringify(purchases));
         
         product.amount -= amount;
@@ -141,72 +175,75 @@ function addNewPurchase() {
 function loadPurchases() {
     const tbody = document.querySelector('#purchaseTable tbody');
     tbody.innerHTML = ''; // serve pra limpar o corpo da tabela antes de carregar
+    purchases.map(e => {
+        const row = document.createElement('tr');
 
-    purchases.forEach(purchase => {
-        // pra cada produto na lista de produtos da compra
-        purchase.products.forEach(product => {
-            // nova linha
-            const row = document.createElement('tr');
+        const productSelectTd = document.createElement('td');
+        productSelectTd.textContent = e.name;
+        productSelectTd.classList.add('firstTd');
+        
+        const unitPriceTd = document.createElement('td');
+        unitPriceTd.textContent = getCorrectFloatToSave(e.unitPrice);
 
-             // cria as td pra productSelect, unitPrice, productAmount, totalPrice e btton
-            const productSelectTd = document.createElement('td');
-            productSelectTd.textContent = product.name;
-            productSelectTd.classList.add('firstTd');
-            
-            const unitPriceTd = document.createElement('td');
-            unitPriceTd.textContent = getCorrectFloatToSave(product.unitPrice);
+        const productAmountTd = document.createElement('td');
+        productAmountTd.textContent = e.amount;
 
-            const productAmountTd = document.createElement('td');
-            productAmountTd.textContent = product.amount;
+        const totalPriceTd = document.createElement('td');
+        totalPriceTd.textContent = getCorrectFloatToSave(e.totalPrice);
 
-            const totalPriceTd = document.createElement('td');
-            totalPriceTd.textContent = getCorrectFloatToSave(product.totalPrice);
+        const deleteButtonTd = document.createElement('td');
+        deleteButtonTd.classList.add('lastTd');
 
-            const deleteButtonTd = document.createElement('td');
-            deleteButtonTd.classList.add('lastTd');
+        // cria o botão de delete
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Delete';
+        deleteButton.classList.add('tdButton');
+        deleteButton.id = e.lineCode;
 
-            // cria o botão de delete
-            const deleteButton = document.createElement('button');
-            deleteButton.textContent = 'Delete';
-            deleteButton.classList.add('tdButton');
-            deleteButton.id = purchase.code;
+        // adiciona o onclick
+        deleteButton.onclick = function() {
+            deleteLine(this.id);
+        };
 
-            // adiciona o onclick
-            deleteButton.onclick = function() {
-                deleteLine(this.id);
-            };
+        // adiciona o botão ao td
+        deleteButtonTd.appendChild(deleteButton);
 
-            // adiciona o botão ao td
-            deleteButtonTd.appendChild(deleteButton);
+        // adiciona as células aos respectivos tds
+        row.appendChild(productSelectTd);
+        row.appendChild(unitPriceTd);
+        row.appendChild(productAmountTd);
+        row.appendChild(totalPriceTd);
+        row.appendChild(deleteButtonTd);
 
-            // adiciona as células aos respectivos tds
-            row.appendChild(productSelectTd);
-            row.appendChild(unitPriceTd);
-            row.appendChild(productAmountTd);
-            row.appendChild(totalPriceTd);
-            row.appendChild(deleteButtonTd);
-
-            // adiciona a linha na tabela
-            tbody.appendChild(row);
-        });
+        // adiciona a linha na tabela
+        tbody.appendChild(row);
     });
 }
 
-function deleteLine(purchaseCode) {
+function addProductsAmountBackToLS(lineCode) {
+    const purchaseCodeList = purchases.find(e => e.lineCode == lineCode);
+    const amount = parseInt(purchaseCodeList.amount);
+
+    let productCode = productSelect.value;
+    const result = getCategoryAndProductById(productCode);
+    const { product } = result; // desestruturando pra ter o produto
+
+    product.amount += amount;
+
+    return { product };
+}
+
+function deleteLine(lineCode) {
     if(confirm("Are you sure you want to delete this product?")) {
         taxes = 0;
         prices = 0;
-        let productCode = productSelect.value;
-        const teste = purchases.find(e => e.code == purchaseCode);
-        const amount = parseInt(teste.products[0].amount);
+        
+        const result = addProductsAmountBackToLS(lineCode);
+        const { product } = result;
 
-        const result = getCategoryAndProductById(productCode);
-        const { product } = result; // desestruturando pra ter o produto
-
-        product.amount += amount;
-
-        purchases = purchases.filter(purchase => purchase.code != purchaseCode);
+        purchases = purchases.filter(purchase => purchase.lineCode != lineCode);
         localStorage.setItem('purchases', JSON.stringify(purchases));
+
         localStorage.setItem('products', JSON.stringify(products));
         purchaseAmount.title = `Number of products available: ${product.amount}`
         
@@ -217,13 +254,13 @@ function deleteLine(purchaseCode) {
 }
 
 function updateCodeInLocalStorage(codeCount) {
-    localStorage.setItem(purchaseCount, codeCount);
+    localStorage.setItem(historyCount, codeCount);
 }
 
-function getValidPurchaseId() {
-    let code = getCodeFromLocalStorage(purchaseCount) || 1;
+function getValidHistoryId() {
+    let code = getCodeFromLocalStorage(historyCount) || 1;
 
-    while (!ensurePurchaseIdIsValid(code)) {
+    while (!ensureHistoryIdIsValid(code)) {
         code++;
     }
 
@@ -231,13 +268,19 @@ function getValidPurchaseId() {
     return code;
 }
 
-function ensurePurchaseIdIsValid(code) {
-    for (let pur of purchases) {
-        if (pur.code == code) {
+function ensureHistoryIdIsValid(code) {
+    for (let his of histories) {
+        if (his.code == code) {
             return false;
         }
     }
     return true;
+}
+
+function getProductLineIndex() {
+    var lastLineCode = purchases.at(-1)?.lineCode ?? 0;
+    var code = lastLineCode + 1;
+    return code
 }
 
 productSelect.addEventListener("change", updateDisabledInputs);
@@ -272,3 +315,45 @@ function reloadPrintPrice() {
     })
     printFinalPrice();
 }
+
+cancelButton.addEventListener("click", e => {
+    e.preventDefault();
+    if (purchases.length >= 1) {
+        if(confirm("Are you sure you want to delete all the products in the cart?")) {
+            // addProductsAmountBackToLS(lineCode);
+            purchases.forEach(purchase => {
+                addProductsAmountBackToLS(purchase.lineCode);
+            });
+
+            purchases = [];
+            localStorage.setItem('purchases', JSON.stringify([]));
+            localStorage.setItem('products', JSON.stringify(products));
+
+            location.reload();
+        }   
+    } else {
+        alert("You can't delete an empty cart.");
+    }
+});
+
+finishButton.addEventListener("click", e => {
+    e.preventDefault();
+
+    if (purchases.length <= 0) {
+        alert("Please, add an product in your cart first.");
+    } else {
+        if(confirm("Are you sure you want to finish your purchase?")) {
+            readCorrectContentOfHomeInputs();
+
+            const inputsData = readCorrectContentOfHomeInputs();
+            const { history } = inputsData;
+
+            histories.push(history);
+            localStorage.setItem('histories', JSON.stringify(histories));
+
+            purchases = [];
+            localStorage.setItem('purchases', JSON.stringify([]));
+            location.reload();
+        }
+    }
+});
