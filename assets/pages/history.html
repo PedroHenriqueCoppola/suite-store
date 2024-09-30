@@ -27,40 +27,23 @@
             
             <section class="content">
                 <h3>Here you can see your full history.</h3>
-                <table>
-                    <tr>
-                        <th id="th-code">Purchase Code</th>
+                <table id="historyTable">
+                    <thead>
+                        <th class="thCode">Purchase Code</th>
                         <th>Tax</th>
                         <th>Total</th>
-                    </tr>
+                    </thead>
          
-                    <tr>
-                        <td id="first-td">001</td>
-                        <td>$2.00</td>
-                        <td>$20.00</td>
-                        <td id="last-td">
-                            <a href="/assets/pages/details.html"><button id="td-button">View</button></a>
-                        </td>
-                    </tr>
-        
-                    <tr>
-                        <td id="first-td">001</td>
-                        <td>$0.50</td>
-                        <td>$10.00</td>
-                        <td id="last-td">
-                            <a href="/assets/pages/details.html"><button id="td-button">View</button></a>
-                        </td>
-                    </tr>
-
-                    <!-- teste de coluna vazia-->
-                    <tr>
-                        <td id="first-empty-td"></td>
-                        <td id="empty-td"></td>
-                        <td id="empty-td"></td>
-                        <td id="last-empty-td">
-                            <button id="lastTdButton"></button>
-                        </td>
-                    </tr>
+                    <tbody>
+                        <tr>
+                            <td class="firstTd showPurchaseCode">001</td>
+                            <td class="showPurchaseTax">$2.00</td>
+                            <td class="showPurchaseTotal">$20.00</td>
+                            <td class="lastTd">
+                                <a href="/assets/pages/details.html"><button class="tdButton">View</button></a>
+                            </td>
+                        </tr>
+                    </tbody>
                 </table> 
             </section>
     
@@ -69,5 +52,7 @@
             </footer>
         </div>
     </main>
+    <script src="../src/utils.js"></script>
+    <script src="../src/history.js"></script>
 </body>
 </html>

@@ -1,4 +1,3 @@
-// const purchaseCount = 'purchaseCodeCount';
 const historyCount = 'historyCodeCount';
 const purchasesJson = 'purchases'
 
@@ -42,12 +41,6 @@ function initHistories() {
         localStorage.setItem('histories', JSON.stringify([])); // inicia o localstorage
     }
 }
-
-// function initPurchaseCodeCount() {
-//     if(!localStorage.getItem(purchaseCount)) {
-//         localStorage.setItem(purchaseCount, 1);
-//     }
-// }
 
 function initHistoryCodeCount() {
     if(!localStorage.getItem(historyCount)) {
@@ -140,8 +133,6 @@ function readCorrectContentOfHomeInputs() {
     };
 
     const purchase = {
-        // code: getValidPurchaseId(),
-        // totalPrice: totalPrice + finalTax,
         products: productInPurchase // coloca o array de products dentro do purchase
     };
 
