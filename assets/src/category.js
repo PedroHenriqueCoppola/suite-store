@@ -108,6 +108,8 @@ function addNewCategory() {
         categories.push(category); // adicionar na lista
         localStorage.setItem('categories', JSON.stringify(categories)); // devolve pro localstoratge
 
+        categoryName.value = '';
+        tax.value = '';
         loadCategories(); // recarrega a tela depois de adicionar categoria
     }
 }

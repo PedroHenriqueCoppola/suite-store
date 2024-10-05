@@ -35,8 +35,12 @@ td {
     padding: 1rem 1.5rem;
 }
 
-.thCode {
+.thCode, .thProduct {
     border-left: none;
+}
+
+.thTax {
+    border-right: none;
 }
 
 .tdButton {
@@ -61,4 +65,8 @@ td {
 
 .lastTd {
     border-right: none;
+}
+
+.second {
+    margin-top: 2rem;
 }

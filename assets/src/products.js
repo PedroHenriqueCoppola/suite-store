@@ -142,6 +142,9 @@ function addNewProductToTheRegister() {
         products.push(product);
         localStorage.setItem('products', JSON.stringify(products));
 
+        productName.value = '';
+        productAmount.value = '';
+        unitPrice.value = '';
         loadProducts();
     }
 }
@@ -173,7 +176,7 @@ function loadProducts() {
         productAmountTd.textContent = p.amount;
 
         const unitPriceTd = document.createElement('td');
-        unitPriceTd.textContent = p.unitPrice;
+        unitPriceTd.textContent = "$ " + p.unitPrice;
 
         const categoryTd = document.createElement('td');
         categoryTd.textContent = getCategoryNameFromTheCode(p.category);

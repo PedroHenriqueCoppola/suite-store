@@ -21,7 +21,6 @@ let taxes = 0;
 let prices = 0;
 
 window.onload = function() {
-    initHistoryCodeCount();
     initPurchases();
     loadPurchases();
     initHistories();
@@ -39,12 +38,6 @@ function initPurchases() {
 function initHistories() {
     if (!localStorage.getItem('histories')) {
         localStorage.setItem('histories', JSON.stringify([])); // inicia o localstorage
-    }
-}
-
-function initHistoryCodeCount() {
-    if(!localStorage.getItem(historyCount)) {
-        localStorage.setItem(historyCount, 1);
     }
 }
 
@@ -127,6 +120,7 @@ function readCorrectContentOfHomeInputs() {
         name: product.name,
         unitPrice: product.unitPrice,
         tax: category.tax,
+        category: category.name,
         finalTax: finalTax,
         amount: amount,
         totalPrice: totalPrice + finalTax
@@ -157,6 +151,7 @@ function addNewPurchase() {
         localStorage.setItem('products', JSON.stringify(products));
         purchaseAmount.title = `Number of products available: ${product.amount}`
         
+        purchaseAmount.value = '';
         printFinalTax();
         printFinalPrice();
         loadPurchases();
@@ -221,7 +216,7 @@ function addProductsAmountBackToLS(lineCode) {
 
     product.amount += amount;
 
-    return { product };
+    return { product, amount };
 }
 
 function deleteLine(lineCode) {
@@ -249,23 +244,9 @@ function updateCodeInLocalStorage(codeCount) {
 }
 
 function getValidHistoryId() {
-    let code = getCodeFromLocalStorage(historyCount) || 1;
-
-    while (!ensureHistoryIdIsValid(code)) {
-        code++;
-    }
-
-    updateCodeInLocalStorage(code + 1);
+    var codeCounter = histories.at(-1)?.id ?? 0;
+    var code = codeCounter + 1;
     return code;
-}
-
-function ensureHistoryIdIsValid(code) {
-    for (let his of histories) {
-        if (his.code == code) {
-            return false;
-        }
-    }
-    return true;
 }
 
 function getProductLineIndex() {
@@ -286,7 +267,7 @@ function updateDisabledInputs() {
 }
 
 function printFinalTax() {
-    showFinalTax.textContent = ("$" + getCorrectFloatToSave(taxes));
+    showFinalTax.textContent = ("$ " + getCorrectFloatToSave(taxes));
 }
 
 function reloadPrintTax() {
@@ -297,7 +278,7 @@ function reloadPrintTax() {
 }
 
 function printFinalPrice() {
-    showFinalPrice.textContent = ("$" + getCorrectFloatToSave(prices));
+    showFinalPrice.textContent = ("$ " + getCorrectFloatToSave(prices));
 }
 
 function reloadPrintPrice() {
@@ -311,7 +292,6 @@ cancelButton.addEventListener("click", e => {
     e.preventDefault();
     if (purchases.length >= 1) {
         if(confirm("Are you sure you want to delete all the products in the cart?")) {
-            // addProductsAmountBackToLS(lineCode);
             purchases.forEach(purchase => {
                 addProductsAmountBackToLS(purchase.lineCode);
             });
