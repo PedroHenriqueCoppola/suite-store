@@ -11,12 +11,3 @@ main {
     gap: 6rem;
     margin: 5rem 0;
 }
-
-.contentCard {
-    background-color: var(--black);
-    border-radius: 20px;
-    padding: 6rem;
-    display: flex;
-    flex-direction: column;
-    gap: 4rem;
-}

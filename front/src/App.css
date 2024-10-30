@@ -57,3 +57,12 @@ input[type="number"]::-webkit-inner-spin-button {
 p, button, h1, span, a { 
   user-select: none;
 }
+
+.contentCard {
+  background-color: var(--black);
+  border-radius: 20px;
+  padding: 6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+}

@@ -8,6 +8,7 @@ function Input(props) {
                     type={props.type} 
                     className={props.className}
                     name={props.name}
+                    id={props.id}
                     placeholder={props.placeholder}
                     pattern={props.pattern}
                     minLength={props.minlength}

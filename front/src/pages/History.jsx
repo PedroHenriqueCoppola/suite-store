@@ -1,11 +1,18 @@
 import '../styles/History.css';
 import '../App.css';
+import Title from '../components/Title/Title';
 
 function History() {
     return (
         <div className="historyApp">
             <main>
-                <h1>to na history</h1>
+                <div className="contentCard">
+                    <Title content="Here you can see your full history." />
+                </div>
+
+                <div className="contentCard">
+                    <Title content="That’s your purchase details." />
+                </div>
             </main>
         </div>
     )
