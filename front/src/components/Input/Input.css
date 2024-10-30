@@ -1,0 +1,56 @@
+.inputLayout {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.inputBox {
+    position: relative;
+    width: 25rem;
+    width: 100%;
+}
+
+.inputBox input {
+    padding: 1.5rem 2.5rem;
+    border: 1px solid var(--white);
+    background-color: var(--black);
+    font-weight: 600;
+    border-radius: 10px;
+    outline: none;
+    color: var(--white);
+    font-size: 1.5rem;
+    transition: .2s;
+}
+
+.inputBox span {
+    position: absolute;
+    left: 1%;
+    padding: .5rem 1rem;
+    top: 20%;
+    pointer-events: none;
+    font-size: 1.6rem;
+    color: var(--ghostwhite);
+    transition: .2s;
+}
+
+.inputBox input:valid,
+.inputBox input:focus {
+    border: 1px solid var(--purple-600);
+}
+
+.inputBox input:valid ~ span,
+.inputBox input:focus ~ span {
+    color: var(--purple-600);
+    transform: translate(.3rem, -2.2rem) scale(0.8);
+    background-color: var(--black);
+    border-left: 1px solid var(--purple-600);
+    border-right: 1px solid var(--purple-600);
+}
+
+p {
+    font-family: "Plus Jakarta Sans", sans-serif;
+    color: var(--ghostwhite);
+    font-weight: lighter;
+    font-size: 1.2rem;
+    margin-left: .5rem;
+}

@@ -1,0 +1,13 @@
+.homeApp {
+    display: flex;
+    justify-content: center;
+    background-color: var(--oil-black);
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    width: 1200px;
+    gap: 6rem;
+    margin: 5rem 0;
+}

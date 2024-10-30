@@ -1,0 +1,190 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+@import url("assets/css/global.css");
+
+:root {
+    --cancel-button: hsl(0, 2%, 88%);
+    --cancel-button-darker: hsl(0, 0%, 81%);
+}
+
+.taxes {
+    cursor: default;
+}
+
+.content {
+    display: flex;
+    padding: 6rem;
+    gap: 4rem;
+    justify-content: center;
+    background-color: var(--ghostwhite);
+}
+
+.values {
+    display: grid;
+    gap: 2rem;
+
+    grid-template:
+    "product product product product"
+    "amount amount taxValue unitPrice"
+    "button button button button";
+}
+
+.productSelect,
+#purchaseAmount,
+#purchaseTax,
+#purchasePrice, 
+#productButton {
+    padding: 1rem 1.5rem;
+    font-size: 1.5rem;
+    border-radius: 0.5rem;
+    outline: none;
+    border-width: 1px;
+    border-color: var(--oil-black);
+    font-weight: 600;
+}
+
+.productSelect {
+    grid-area: product;
+    width: 100%;
+}
+
+.amountContent {
+    grid-area: amount;
+}
+
+.taxContent {
+    grid-area: taxValue;
+}
+
+#purchaseTax {
+    background-color: var(--input-cancelled);
+}
+
+.priceContent {
+    grid-area: unitPrice;
+}
+
+#purchasePrice {
+    background-color: var(--input-cancelled);
+}
+
+#productButton {
+    grid-area: button;
+
+    border: none;
+    color: var(--oil-black);
+    background-color: var(--purple-300);
+    font-weight: 700;
+}
+
+#productButton:hover {
+    background-color: var(--purple-100);
+    cursor: pointer;
+}
+
+.line {
+    background-color: var(--oil-black);
+    width: 1px;
+}
+
+.finalPrice {
+    display: flex;
+    flex-direction: column;
+}
+
+table {
+    border-collapse: collapse;    
+}
+
+th, td {
+    border: 1px solid var(--oil-black);
+    text-align: left;
+}
+
+th {
+    border-top: none;
+    font-size: 1.8rem;
+    padding: .5rem 1rem
+}
+
+td {
+    font-size: 1.5rem;
+    padding: .5rem 1.5rem;
+}
+
+.thProduct {
+    border-left: none;
+}
+
+.tdButton {
+    padding: .8rem 1.8rem;
+    font-size: 1.4rem;
+    border-radius: 1rem;
+    border: none;
+    color: var(--oil-black);
+    background-color: var(--purple-300);
+    font-weight: 700;
+}
+
+.tdButton:hover {
+    background-color: var(--purple-100);
+    cursor: pointer;
+}
+
+.firstTd {
+    border-left: none;
+}
+
+.lastTd {
+    border-right: none;
+}
+
+.taxes {
+    margin-top: 4rem;
+    display: flex;
+    flex-direction: column;
+    gap: .8rem;
+    align-items: flex-end;
+}
+
+.finalTax,
+.finalTotal {
+    font-size: 1.6rem;
+    display: flex;
+    gap: 1rem;
+}
+
+#cancel {
+    color: var(--cancel-button-darker);
+}
+
+#finish {
+    margin-left: 2rem;
+    margin-top: 2rem;
+    padding: 1rem 5rem;
+    font-size: 1.4rem;
+    border-radius: 1rem;
+    border: none;
+    color: var(--oil-black);
+    background-color: var(--purple-300);
+    font-weight: 700;
+}
+
+#finish:hover {
+    background-color: var(--purple-100);
+    cursor: pointer;
+}
+
+#cancel {
+    padding: 1rem 5rem;
+    font-size: 1.4rem;
+    border-radius: 1rem;
+    border: none;
+    color: var(--oil-black);
+    background-color: var(--cancel-button);
+    font-weight: 700;
+}
+
+#cancel:hover {
+    background-color: var(--cancel-button-darker);
+    cursor: pointer;
+}

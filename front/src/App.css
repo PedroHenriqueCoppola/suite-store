@@ -1,38 +1,59 @@
-.App {
-  text-align: center;
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+
+  font-family: 'Montserrat', sans-serif;
+}
+/* font-family: "Plus Jakarta Sans", sans-serif; */
+
+:root {
+  font-size: 62.5%;
+
+  --purple-600: hsl(262, 83%, 58%);
+  --purple-400: hsl(258, 90%, 66%);
+  --purple-200: hsl(258, 83%, 69%);
+  --ghostwhite: hsl(240, 7%, 78%);
+  --white: hsl(0, 0%, 100%);
+  --black: hsl(240, 10%, 4%);
+  --oil-black-darker: hwb(240 11% 89%);
+  --oil-black: hsl(240, 6%, 17%);
+  --cancel: hsl(240, 15%, 71%);
+  --cancel-darker: hsl(240, 7%, 58%);
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+body::-webkit-scrollbar {
+  width: 1rem;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+body::-webkit-scrollbar-track {
+  background: var(--oil-black);
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+body::-webkit-scrollbar-thumb {
+  background-color: var(--oil-black-darker);
+  border-radius: 20px;
 }
 
-.App-link {
-  color: #61dafb;
+body::-webkit-scrollbar-thumb:hover {
+  background-color: var(--black);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* não selecionar */
+p, button, h1, span, a { 
+  user-select: none;
 }

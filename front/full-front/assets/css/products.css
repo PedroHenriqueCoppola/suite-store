@@ -1,0 +1,127 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+@import url("../css/global.css");
+
+.content {
+    display: flex;
+    padding: 8rem 4rem;
+    gap: 8rem;
+    justify-content: center;
+    background-color: var(--ghostwhite);
+}
+
+.product {
+    display: grid;
+    gap: 2rem;
+
+    grid-template:
+    "product product"
+    "amount unit"
+    "category category"
+    "button button";
+}
+
+#productName,
+#productAmount,
+#unitPrice,
+#category, 
+#productButton {
+    padding: 1rem 1.5rem;
+    font-size: 1.5rem;
+    border-radius: 0.5rem;
+    outline: none;
+    border-width: 1px;
+    border-color: var(--oil-black);
+    font-weight: 600;
+}
+
+.nameContent {grid-area: product;}
+
+#productName {width: 100%;}
+
+.amountContent {grid-area: amount;}
+
+#productAmount {
+    width: 100%;
+}
+
+.priceContent {
+    grid-area: unit;
+}
+
+#unitPrice {
+    width: 100%;
+}
+
+#category {
+    grid-area: category;
+}
+
+#productButton {
+    grid-area: button;
+
+    border: none;
+    color: var(--oil-black);
+    background-color: var(--purple-300);
+    font-weight: bold;
+}
+
+#productButton:hover {
+    background-color: var(--purple-100);
+    cursor: pointer;
+}
+
+.amountContent, .priceContent {
+    width: 20rem;
+}
+
+.products-table {
+    display: flex;
+    flex-direction: column;
+}
+
+table {
+    border-collapse: collapse;    
+}
+
+th, td {
+    border: 1px solid var(--oil-black);
+    text-align: left;
+}
+
+th {
+    border-top: none;
+    font-size: 1.8rem;
+    padding: 1rem 1.5rem
+}
+
+td {
+    font-size: 1.5rem;
+    padding: 1rem 1.5rem;
+}
+
+.thCode {
+    border-left: none;
+}
+
+.tdButton {
+    padding: .8rem 1.8rem;
+    font-size: 1.4rem;
+    border-radius: 1rem;
+    border: none;
+    color: var(--oil-black);
+    background-color: var(--purple-300);
+    font-weight: 700;
+}
+
+.tdButton:hover {
+    background-color: var(--purple-100);
+    cursor: pointer;
+}
+
+.firstTd {
+    border-left: none;
+}
+
+.lastTd {
+    border-right: none;
+}

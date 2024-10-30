@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="../css/products.css">
+
+    <link rel="shortcut icon" href="../images/logo.png" type="image/x-icon">
+
+    <title>Products</title>
+</head>
+<body>
+    <main>
+        <div class="app">
+            <header>
+                <a href="../../index.html" class="title">Suite Store</a>
+
+                <nav>
+                    <a href="../../index.html">Home</a>
+                    <a href="#">Products</a>
+                    <a href="../pages/category.html">Categories</a>
+                    <a href="../pages/history.html">History</a>
+                </nav>
+            </header>
+            
+            <section class="content">
+                <form id="newProductForm">
+                    <div class="product">
+                        <div class="nameContent">
+                            <input 
+                                type="text" 
+                                id="productName"
+                                name="prodName"
+                                placeholder="Product name:"
+                            />
+                        </div>
+
+                        <div class="amountContent">
+                            <input 
+                                type="number" 
+                                id="productAmount"
+                                name="prodAmount"
+                                placeholder="Amount:"
+                                step="0.01"
+                                min="1"
+                            />
+                        </div>
+    
+                        <div class="priceContent">
+                            <input 
+                                type="number" 
+                                id="unitPrice" 
+                                name="prodPrice"
+                                placeholder="Unit price:"
+                                step="0.01"
+                                min="1"
+                            />
+                        </div>
+                        
+                        <select id="category" name="categoryCode"></select>
+                        
+                        <button id="productButton">Add New Product</button>
+                    </div>
+
+                    <div class="errorMessage">
+                        <p>All the information must be filled!</p>
+                    </div>          
+                </form>
+    
+                <div class="productsTable">
+                    <table id="productsTable">
+                        <thead>
+                            <th class="thCode">Code</th>
+                            <th>Product</th>
+                            <th>Amount</th>
+                            <th>Unit price</th>
+                            <th>Category</th>
+                        </thead>
+        
+                        <tbody>
+                            <tr>
+                                <td class="firstTd">001</td>
+                                <td>Rice</td>
+                                <td>10</td>
+                                <td>20.00</td>
+                                <td>Food</td>
+                                <td class="lastTd">
+                                    <button class="tdButton">Delete</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table> 
+                </div> 
+            </section>
+
+            <footer>
+                <p class="rights">© 2024 SoftExpert. All rights reserved.</p>
+            </footer>
+        </div>
+    </main>
+    <script src="../js/utils.js"></script>
+    <script src="../js/products.js"></script>
+</body>
+</html>

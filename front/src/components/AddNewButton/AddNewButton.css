@@ -1,0 +1,21 @@
+.addNewButton {
+    border: none;
+    outline: none;
+    font-size: 1.5rem;
+    padding: 1rem 1.5rem;
+    border-radius: 20px;
+    color: var(--black);
+    background-color: var(--purple-600);
+    font-weight: 800;
+    width: 100%;
+
+    transition-property: transform;
+    animation-timing-function: ease-in-out;
+    transition-duration: .3s;
+}
+
+.addNewButton:hover {
+    background-color: var(--purple-400);
+    cursor: pointer;
+    transform: scale(1.05);
+}

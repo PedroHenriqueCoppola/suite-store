@@ -1,0 +1,74 @@
+p, a, span {
+    color: white;
+}
+
+.line {
+    border: 1px solid white;
+}
+
+.footerApp {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--black);
+}
+
+footer {
+    padding: 3.2rem 3rem;
+    display: flex;
+    width: 1200px;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+span {
+    color: var(--white);
+    font-weight: 800;
+    font-size: 2rem;
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+.texts {
+    display: flex;
+    margin-top: 1.6rem;
+    gap: 3.2rem;
+}
+
+.texts > a {
+    font-family: "Plus Jakarta Sans", sans-serif;
+    color: var(--ghostwhite);
+    font-size: 1.4rem;
+    text-decoration: none;
+}
+
+.texts > a:hover {
+    color: var(--white);
+}
+
+img {
+    height: 16rem;
+}
+
+.line {
+    border: 1px solid var(--purple-400);
+}
+
+.rights {
+    display: flex;
+    justify-content: center;
+    font-size: 1.4rem;
+    font-weight: bold;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    color: var(--white);
+}

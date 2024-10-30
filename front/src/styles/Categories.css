@@ -1,0 +1,22 @@
+.categoriesApp {
+    display: flex;
+    justify-content: center;
+    background-color: var(--oil-black);
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    width: 1200px;
+    gap: 6rem;
+    margin: 5rem 0;
+}
+
+.contentCard {
+    background-color: var(--black);
+    border-radius: 20px;
+    padding: 6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+}

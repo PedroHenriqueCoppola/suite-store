@@ -1,0 +1,151 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%;
+
+    font-family: 'Montserrat', sans-serif;
+}
+
+:root {
+    font-size: 62.5%;
+
+    --purple-900: hsl(256, 68%, 29%);
+    --purple-800: hsl(256, 68%, 37%);
+    --purple-600: hsl(256, 62%, 54%);
+    --purple-300: hsl(256, 79%, 62%);
+    --purple-100: hsl(256, 85%, 68%);
+    --ghostwhite: hsl(240, 36%, 96%);
+    --error-red: hsl(6, 100%, 57%);
+    --oil-black: hsl(240, 7%, 19%);
+}
+
+main {
+    animation: entrance .8s backwards;
+}
+
+.app {
+    display: flex;
+    flex-direction: column;
+    max-width: 144rem;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+header {
+    padding: 2.5rem 3.2rem;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 10rem;
+    background-color: var(--oil-black);
+    margin-top: 2rem;
+    border-radius: 2rem 2rem 0rem 0rem;
+}
+
+.title {
+    font-size: 3rem;
+    color: var(--purple-100);
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.title:hover {
+    color: var(--purple-600);
+}
+
+header:hover,
+footer:hover,
+th:hover,
+td:hover{
+    cursor: default;
+}
+
+header > nav {
+    display: flex;
+    gap: 6rem;
+}
+
+header > nav > a {
+    text-decoration: none;
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--purple-600);
+}
+
+header > nav > a:hover {
+    color: var(--purple-100);
+}
+
+#categoryButton,
+#productButton,
+#productButton,
+.cancel,
+.finish {
+    transition-property: transform;
+    transition-duration: 0.4s;
+}
+
+#categoryButton:hover,
+#productButton:hover,
+#productButton:hover,
+.cancel:hover,
+.finish:hover {
+    transform: scale(1.05)
+}
+
+/* CONTROLE DE ERROS */
+.contentError {
+    border: 3px solid var(--error-red);
+    border-radius: 1rem;
+    z-index: 1;
+}
+
+.errorMessage {
+    display: flex;
+    justify-content: center;
+    visibility: hidden;
+}
+
+.active {
+    visibility: visible;
+    display: flex;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-top: 3rem;
+    color: var(--error-red);
+    font-weight: bold;
+}
+
+footer {
+    padding: 2.5rem 2.7rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    gap: 10rem;
+    background-color: var(--oil-black);
+    border-radius: 0rem 0rem 2rem 2rem;
+}
+
+footer > p {
+    font-size: 1.3rem;
+    color: var(--purple-600);
+    font-weight: 600;
+}
+
+@keyframes entrance {
+    0% {
+        transform: translateY(-5rem);
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}

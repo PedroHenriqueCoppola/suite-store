@@ -1,0 +1,72 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+@import url("../css/global.css");
+
+.content {
+    display: flex;
+    flex-direction: column;
+    padding: 6rem 4rem;
+    gap: 4rem;
+    justify-content: center;
+    background-color: var(--ghostwhite);
+}
+
+.content > h3 {
+    font-size: 2rem;
+    color: var(--purple-600);
+}
+
+table {
+    border-collapse: collapse;    
+}
+
+th, td {
+    border: 1px solid var(--oil-black);
+    text-align: left;
+}
+
+th {
+    border-top: none;
+    font-size: 1.8rem;
+    padding: 1rem 1.5rem;
+}
+
+td {
+    font-size: 1.5rem;
+    padding: 1rem 1.5rem;
+}
+
+.thCode, .thProduct {
+    border-left: none;
+}
+
+.thTax {
+    border-right: none;
+}
+
+.tdButton {
+    padding: .8rem 1.8rem;
+    font-size: 1.4rem;
+    border-radius: 1rem;
+    border: none;
+    color: var(--oil-black);
+    background-color: var(--purple-300);
+    font-weight: 700;
+    width: 100%;
+}
+
+.tdButton:hover {
+    background-color: var(--purple-100);
+    cursor: pointer;
+}
+
+.firstTd {
+    border-left: none;
+}
+
+.lastTd {
+    border-right: none;
+}
+
+.second {
+    margin-top: 2rem;
+}
