@@ -54,6 +54,7 @@ span {
 
 .texts > a:hover {
     color: var(--white);
+    transition: .2s ease;
 }
 
 img {

@@ -1,18 +1,25 @@
 import './Header.css';
 import '../../App.css';
+import SwitchMode from '../SwitchMode/SwitchMode';
 
 function Header() {
     return (
         <div className="headerApp">
             <header>
-                <a className="title">Suite Store</a>
+                <div className="navs">
+                    <a className="title">Suite Store</a>
 
-                <nav className="nav">
-                    <a href="/">Home</a>
-                    <a href="/products">Products</a>
-                    <a href="/categories">Categories</a>
-                    <a href="/history">History</a>
-                </nav>
+                    <nav className="nav">
+                        <a href="/">Home</a>
+                        <a href="/products">Products</a>
+                        <a href="/categories">Categories</a>
+                        <a href="/history">History</a>
+                    </nav>
+                </div>
+
+                {/* <div className="switchs">
+                    <SwitchMode />
+                </div> */}
             </header>
         </div>
     )

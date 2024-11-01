@@ -11,3 +11,64 @@ main {
     gap: 6rem;
     margin: 5rem 0;
 }
+
+.gridBoxHome {
+    background-color: var(--black);
+    border-radius: 20px;
+    padding: 6rem;
+    display: grid;
+    gap: 4rem;
+    column-gap: 2rem;
+    grid-template-columns: auto auto auto;
+    grid-template-rows: auto auto auto;
+}
+
+.productContent {grid-column: 1/4;}
+.productButton {grid-column: 1/4;}
+
+.productContent {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.allCards {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    flex-wrap: wrap;
+    gap: 2rem;
+}
+
+.finalInformations {
+    cursor: default;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    align-items: flex-end;
+}
+
+.finalTax,
+.finalTotal {
+    font-size: 1.8rem;
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.finalTax p,
+.finalTotal p {
+    font-size: 1.8rem;
+    font-weight: 200;
+    color: var(--white);
+}
+
+.finalTotal {
+    margin-top: -1.2rem;
+}
+
+.cancelAndFinishButton {
+    display: flex;
+    gap: 3rem;
+    width: 39rem;;
+}

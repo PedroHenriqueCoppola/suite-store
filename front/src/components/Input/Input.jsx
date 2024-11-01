@@ -12,9 +12,11 @@ function Input(props) {
                     placeholder={props.placeholder}
                     pattern={props.pattern}
                     minLength={props.minlength}
-                    maxlength={props.maxlength}
+                    maxLength={props.maxlength}
                     step={props.step}
                     required={props.required}
+                    disabled={props.disabled}
+                    onChange={props.onChange}
                 />
                 <span>{props.span}</span>
             </div>

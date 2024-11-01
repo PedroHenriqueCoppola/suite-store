@@ -9,7 +9,7 @@ function Products() {
         <div className="productsApp">
             <main>
                 <form id="newProductForm" autocomplete="off">
-                    <div className="gridBox">
+                    <div className="gridBoxProducts">
                         <div className="nameContent">
                             <Input
                                 type="text" 

@@ -2,7 +2,11 @@ import './AddNewButton.css'
 
 function AddNewButton(props) {
     return (
-        <button className='addNewButton'>{props.content}</button>
+        <button 
+            className='addNewButton' 
+            onClick={props.onClick}
+            onSubmit={props.onSubmit}
+        >{props.content}</button>
     )
 }
 

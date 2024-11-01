@@ -1,0 +1,121 @@
+body.activeModal {
+    overflow-y: hidden;
+}
+
+.modalButton {
+    padding: 10px 20px;
+    display: block;
+    margin: 100px auto 0;
+    font-size: 18px;
+}
+
+.modal {
+    z-index: 111;
+}
+
+.modal, .overlay {
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    position: fixed;
+}
+
+.overlay {
+    background: rgba(24, 22, 22, 0.8);
+    backdrop-filter: blur(3px);
+}
+
+.modalContent {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #f1f1f1;
+    padding: 8rem 11rem 7rem;
+    border-radius: 10px;
+    background-color: var(--black);
+    border: 1px solid var(--white);
+    max-width: 90rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6rem;
+    animation: entrance .2s linear;
+}
+
+.oops {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.oops > img {
+    width: 15rem;
+    height: 15rem;
+}
+
+.text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.oops > .text > h1 {
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: 800;
+    color: var(--purple-600);
+    font-size: 5rem;
+}
+
+.oops > .text > h3 {
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: 800;
+    color: var(--purple-600);
+    font-size: 2.8rem;
+}
+
+.modalMessage {
+    max-width: 80rem;
+}
+
+.modalMessage > p {
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: 600;
+    color: var(--white);
+    font-size: 2.2rem;
+    margin-left: 0;
+    overflow: hidden; /* oculta o texto que ultrapassar o tamanho da div */
+    text-overflow: clip;
+}
+
+.closeModal {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    padding: 5px 7px;
+    background-color: transparent;
+    border: none;
+}
+
+.closeModal > img {
+    object-fit: contain;
+    width: 3rem;
+    height: 3rem;
+}
+
+.closeModal:hover {
+    cursor: pointer;
+}
+
+@keyframes entrance{
+    0% {
+        transform: translate(-50%, -50%) scale(0.4);
+    }
+}

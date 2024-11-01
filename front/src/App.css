@@ -54,7 +54,7 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 /* não selecionar */
-p, button, h1, span, a { 
+p, button, h1, span, a, h3, img { 
   user-select: none;
 }
 
@@ -65,4 +65,27 @@ p, button, h1, span, a {
   display: flex;
   flex-direction: column;
   gap: 4rem;
+}
+
+.select {
+  padding: 1.5rem 2.5rem;
+  border: 1px solid var(--white);
+  background-color: var(--black);
+  font-size: 1.5rem;
+  border-radius: 10px;
+  outline: none;
+  color: var(--white);
+  font-weight: 600;
+  width: 100%;
+
+  /* seta */
+  appearance: none;
+  background-image: url("./assets/arrow-down.png");
+  background-repeat: no-repeat;
+  background-position: right 1.5rem top 50%;
+  background-size: 1.2rem auto;
+}
+
+.select:hover {
+  border: 1px solid var(--purple-600);
 }

@@ -9,6 +9,12 @@ header {
     display: flex;
     align-items: center;
     width: 1200px;
+    justify-content: space-between;
+}
+
+.navs {
+    display: flex;
+    align-items: center;
     gap: 10rem;
 }
 
@@ -20,22 +26,24 @@ header {
 
 .title:hover {
     color: var(--purple-600);
+    transition: .2s ease;
 }
 
-header > nav {
+.navs > nav {
     display: flex;
     gap: 6rem;
 }
 
-header > nav > a {
+.navs > nav > a {
     text-decoration: none;
     font-size: 1.8rem;
     font-weight: 800;
     color: var(--white);
 }
 
-header > nav > a:hover {
+.navs > nav > a:hover {
     color: var(--purple-400);
+    transition: .2s ease;
 }
 
 header:hover,

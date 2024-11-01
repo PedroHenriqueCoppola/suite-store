@@ -15,8 +15,11 @@ function executeEndPoints() {
         case 'POST':
             // $name = filter_input(INPUT_POST, 'catName', FILTER_SANITIZE_SPECIAL_CHARS);
             // $tax = filter_input(INPUT_POST, 'catTax', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
-            $name = $_POST['rightName'];
-            $tax = $_POST['rightTax'];
+            $name = $_POST['name'];
+            error_log(print_r(($_POST), true));
+            // error_log(print_r($name, true));
+            $tax = $_POST['tax'];
+            // error_log(print_r($tax, true));
             addCategory($name, $tax);
             break;
 
