@@ -33,3 +33,20 @@ main {
     flex-direction: column;
     gap: .5rem;
 }
+
+.thProdCode {
+    border-left: none;
+    width: 8%;
+}
+
+.thProdAmount {
+    width: 10%;
+}
+
+.thProdPrice {
+    width: 13%;
+}
+
+.thCatName {
+    width: 17%;
+}

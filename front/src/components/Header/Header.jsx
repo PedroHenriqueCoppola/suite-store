@@ -1,6 +1,5 @@
 import './Header.css';
 import '../../App.css';
-import SwitchMode from '../SwitchMode/SwitchMode';
 
 function Header() {
     return (

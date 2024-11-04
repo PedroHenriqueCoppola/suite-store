@@ -11,3 +11,12 @@ main {
     gap: 6rem;
     margin: 5rem 0;
 }
+
+.thCode {
+    border-left: none;
+    width: 18%;
+}
+
+.thTax {
+    width: 20%;
+}
