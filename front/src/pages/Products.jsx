@@ -12,30 +12,21 @@ function Products() {
     const productName = document.getElementById("productName");
     const productAmount = document.getElementById("productAmount");
     const unitPrice = document.getElementById("unitPrice");
+
     const [products, setProducts] = useState([]);
+    const [categories, setCategories] = useState([]);
 
     useEffect(() => {
-        createCategoryOption()
-        getProducts()
-    }, []); // [] pra parar o loop
+        getProducts();
 
-    function createCategoryOption() {
         fetch("http://localhost/routes/category.php")
-        .then(res => {
-            return res.json(); // filtra o response do fetch para um json
+        .then((res) => res.json())
+        .then((data) => {
+            setCategories(data); // armazena os dados das categorias no state
         })
-        .then(data => { // data é o que o fetch me retorna em json depois de ter filtrado ele
-            data.forEach(el => {
-                const option = document.createElement("option");
-                option.value = el.code;
-                option.textContent = el.name;
-        
-                category.append(option);
-            })
-        })
-        .catch(error => console.log(error));
-    }
- 
+        .catch((error) => console.log('Erro: ', error));
+    }, []); // o array vazio garante que o fetch aconteça apenas na montagem do componente e para o loop
+
     async function getProducts() {
         try {
             const response = await fetch("http://localhost/routes/product.php");
@@ -108,15 +99,6 @@ function Products() {
         }
     }
 
-    async function getCategoryNameFromTheCode(categoryCode) {
-        const categoriesList = await fetch("http://localhost/routes/category.php")
-            .then (res => {
-                return res.json();
-            })
-        const returnCategoryCode = categoriesList.find(el => el.code == categoryCode);
-        return returnCategoryCode.name;
-    }
-
     return (
         <div className="productsApp">
             <main>
@@ -170,10 +152,13 @@ function Products() {
                                 name="categoryCode" 
                                 id="category" 
                                 className="select"
-                                onChange={handleChangeCatName} >
-                                {/* <option value="" hidden>Select the category</option> */}
+                                onChange={handleChangeCatName}>
+                                    <option value="" hidden>Select the category</option>
+                                    {categories.map((category) => (
+                                        <option key={category.code} value={category.code}>{category.name}</option>
+                                    ))}
                             </select>
-                            <p>Select the category</p>
+                            <p>Select the category of this product</p>
                         </div>
 
                         <div className="buttonContent">
@@ -203,9 +188,7 @@ function Products() {
                                         <td>{product.name}</td>
                                         <td>{product.amount}</td>
                                         <td>{product.price}</td>
-                                        {/* ARRUMAR AQUI. ELE BASICAMENTE PRECISA EXECUTAR O QUE ESSA FUNÇÃO PEDE MAS NÃO PODE TER ASYNC NA FUNÇÃO GLOBAL (MESMO ERRO QUE TAVA COM O GUSTAVO)*/}
-                                        {/* <td>{getCategoryNameFromTheCode(product.category_code)}</td> */}
-                                        <td>{product.category_code}</td>
+                                        <td>{product.catname}</td>
                                         <td className='lastTd'>
                                             <DeleteButton className="prodButton" onClick={() => handleDeleteProduct(product.code)}/>
                                         </td>

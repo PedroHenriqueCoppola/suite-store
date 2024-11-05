@@ -3,7 +3,9 @@ include("../index.php");
 
 function getProducts() {
     try {
-        $stmt = myPDO->query('SELECT * FROM products');
+        $stmt = myPDO->query('SELECT p.code, p.name, p.amount, p.price, p.category_code, c.name as catName
+                              FROM products p
+                              INNER JOIN categories c ON p.category_code = c.code');
         $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
         echo json_encode($products);
     } catch(PDOException $e) {
