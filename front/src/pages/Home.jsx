@@ -10,38 +10,56 @@ import LocalStorage from '../classes/LocalStorage';
 import { useEffect, useState } from 'react';
 import Subtitle from '../components/Subtitle/Subtitle';
 import DeleteButton from '../components/DeleteButton/DeleteButton';
+import ViewButton from '../components/ViewButton/ViewButton'
 
 function Home() {
+    // useStates
+    const [products, setProducts] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [purchases, setPurchases] = useState([]);
+    const [tax, setTax] = useState("");
+    const [price, setPrice] = useState("");
+
+    // PHP
+    const urlProducts = `http://localhost/routes/product.php`;
+    const urlCategories = `http://localhost/routes/category.php`;
+    const urlOrders = `http://localhost/routes/order.php`; 
+    const urlOrderItem = `http://localhost/routes/order-item.php`;
+    
     // consts
     const product = document.getElementById("product");
     const purchaseAmount = document.getElementById("purchaseAmount");
     const purchaseTax = document.getElementById("purchaseTax");
     const purchasePrice = document.getElementById("purchasePrice");
 
-    // useStates
-    const [products, setProducts] = useState([]);
-    const [categories, setCategories] = useState([]);
-    const [purchases, setPurchases] = useState([]);
+    useEffect(() => {
+        LocalStorage.initPurchases();
+        setPurchases(LocalStorage.getObjectFromLocalStorage('purchases'));
+        
+        const fetchData = async() => {
+            fetch(urlProducts)
+            .then((res) => res.json())
+            .then((data) => {
+                setProducts(data)
+            })
+            .catch((error) => {console.log("Erro: ", error)})
+            
+            fetch(urlCategories)
+            .then((res) => res.json())
+            .then((data) => {
+                setCategories(data)
+            })
+            .catch((error) => {console.log("Erro: ", error)})
+        }
+        
+        fetchData();
+    }, []);
 
     useEffect(() => {
-        LocalStorage.initPurchases()
-
-        setPurchases(LocalStorage.getObjectFromLocalStorage('purchases'))
-
-        fetch("http://localhost/routes/product.php")
-        .then((res) => res.json())
-        .then((data) => {
-            setProducts(data)
-        })
-        .catch((error) => {console.log("Erro: ", error)})
-
-        fetch("http://localhost/routes/category.php")
-        .then((res) => res.json())
-        .then((data) => {
-            setCategories(data)
-        })
-        .catch((error) => {console.log("Erro: ", error)})
-    }, [])
+        updateTax()
+        updatePrice()
+        verifyTaxAndPrice()
+    }, [purchases]);
 
     let updateDisabledInputs = () => {
         const productProperties = products.find(el => el.code == product.value);
@@ -71,11 +89,7 @@ function Home() {
         // calculo da taxa de um produto
         const percentageTax = parseFloat(categoryProperties.tax)/100;
         const finalTax = percentageTax * totalPrice;
-        
-    //     // taxa e preço que aparecem como total em cima dos botões
-    //     taxes += finalTax;
-    //     prices += totalPrice + finalTax;
-        
+    
         const productInPurchase = {
             id: productProperties.code,
             cardCode: getProductIndex(),
@@ -94,19 +108,19 @@ function Home() {
         return { productProperties, amount, productInPurchase, purchase };
     }
 
-    async function addNewPurchase(e) {
+    function addNewPurchase(e) {
         e.preventDefault()
-        if (await checkPurchaseInputs() != false) {
+        if (checkPurchaseInputs() != false) {
             const inputsData = readCorrectContentOfHomeInputs();
             const { productInPurchase } = inputsData;
     
-            purchases.push(productInPurchase);
-            localStorage.setItem('purchases', JSON.stringify(purchases))
-            setPurchases(LocalStorage.getObjectFromLocalStorage('purchases'))
+            const newProduct = [...purchases, productInPurchase];
+            setPurchases(newProduct);
+            localStorage.setItem('purchases', JSON.stringify(newProduct))
             
             purchaseAmount.value = '';
-            // printFinalTax();
-            // printFinalPrice();
+            updateTax()
+            updatePrice()
         }
     }
 
@@ -116,18 +130,113 @@ function Home() {
         return code;
     }
 
-    function deleteCard(cardCode) {
-        // taxes = 0;
-        // prices = 0;
+    const deleteCard = (cardCode) => {
+        const deleteProd = purchases.filter(purchase => purchase.cardCode != cardCode);
+        setPurchases(deleteProd);
+        localStorage.setItem('purchases', JSON.stringify(deleteProd));
         
-        setPurchases(purchases.filter(purchase => purchase.cardCode != cardCode));
-        console.log(purchases)
-        localStorage.setItem('purchases', JSON.stringify(purchases));
-        
-        // reloadPrintTax();
-        // reloadPrintPrice();
+        updateTax()
+        updatePrice()
+    };
+
+    function cancelButton(e) {
+        e.preventDefault();
+        if (purchases.length >= 1) {
+            localStorage.setItem('purchases', JSON.stringify([]));
+            setPurchases(LocalStorage.getObjectFromLocalStorage('purchases'))
+        } else {
+            alert("You can't delete an empty cart.");
+        }
     }
 
+    function updateTax() {
+        let fullTax = 0;
+        purchases.forEach(product => {
+            fullTax += product.finalTax
+            setTax(fullTax)
+        })
+    }
+
+    function updatePrice() {
+        let fullPrice = 0;
+        purchases.forEach(product => {
+            fullPrice += product.totalPrice
+            setPrice(fullPrice)
+        })
+    }
+
+    function verifyTaxAndPrice() {
+        if (purchases.length <= 0) {
+            setTax(0);
+            setPrice(0);
+        }
+    }
+
+    async function getLastCode() {
+        const response = await fetch(urlOrders);
+        const ordersList = await response.json();
+        return ordersList[0].code;
+    }
+
+    async function finishButton(e) {
+        e.preventDefault();
+
+        if (purchases.length <= 0) {
+            alert("Please, add an product in your cart first.");
+        } else {
+            // criar o order
+            const date = new Date().toLocaleString();
+            const order = await fetch(urlOrders, {
+                method: 'POST',
+                body: JSON.stringify({day: date})
+            })
+            .then(res => res.json())
+            .catch(error => {
+                console.log("Erro: ", error);
+            })
+
+            // cria o objeto e salva no banco
+            const object = purchases.map(async purchase => {
+                await fetch(urlOrderItem, {
+                    method: 'POST',
+                    body: JSON.stringify({code: order.code, prodCode: purchase.id, amount: purchase.amount})
+                })
+
+                // atualizar os valores
+                const data = {
+                    code: await getLastCode(),
+                    tax: LocalStorage.getCorrectFloatToSave(tax),
+                    total: LocalStorage.getCorrectFloatToSave(price)
+                }
+
+                fetch(urlOrders, {
+                    method: 'PUT',
+                    body: JSON.stringify(data) 
+                })
+            })
+
+            // diminui no estoque
+            const promise3 = purchases.forEach(e => {
+                const stock = {
+                    id: e.id,
+                    amount: e.amount
+                }
+
+                fetch(urlOrderItem, {
+                    method: 'PUT',
+                    body: JSON.stringify(stock)
+                })
+            })
+
+            Promise.all([order, object, promise3]).then(async () => {
+                localStorage.setItem('purchases', JSON.stringify([]));
+                setPurchases(LocalStorage.getObjectFromLocalStorage('purchases'));
+                setTax(0);
+                setPrice(0);
+            })
+        }
+    }
+    
     return (
         <div className="homeApp">
             <main>
@@ -184,19 +293,20 @@ function Home() {
                     {purchases.length >= 1 ? (
                         <div className="allCards">
                             {purchases.map((el) => (
-                                <div className="productCard">
+                                <div className="productCard" key={el.cardCode}>
                                     <h3>Product: {el.name}</h3>
 
                                     <div className="subline"></div>
 
                                     <div className="informations">
-                                        <p className="cardText">Unit price: $ {el.unitPrice}</p>
                                         <p className="cardText">Amount: {el.amount}</p>
-                                        <p className="cardText">Total: $ {el.totalPrice}</p>
+                                        <p className="cardText">Unit price: $ {LocalStorage.getCorrectFloatToSave(el.unitPrice)}</p>
+                                        <p className="cardText">Tax payed: $ {LocalStorage.getCorrectFloatToSave(el.finalTax)}</p>
+                                        <p className="cardText">Total: $ {LocalStorage.getCorrectFloatToSave(el.totalPrice)}</p>
                                     </div>
 
                                     <div className="cardDeleteButton">
-                                        <DeleteButton id={el.cardCode} onClick={() => deleteCard(el.cardCode)}/>
+                                        <DeleteButton onClick={() => deleteCard(el.cardCode)}/>
                                     </div>
                                 </div>
                             ))}
@@ -207,27 +317,17 @@ function Home() {
                         <div className="finalInformations">
                             <div className="finalTax">
                                 <h4>Tax ($):</h4>
-                                <p id="showFinalTax">$0.00</p>
+                                <p id="showFinalTax">${LocalStorage.getCorrectFloatToSave(tax)}</p>
                             </div>
 
                             <div className="finalTotal">
                                 <h4>Total ($):</h4>
-                                <p id="showFinalPrice">$0.00</p>
+                                <p id="showFinalPrice">${LocalStorage.getCorrectFloatToSave(price)}</p>
                             </div>
 
                             <div className="cancelAndFinishButton">
-                                <CancelButton content="Cancel" onClick={(e) => {
-                                    e.preventDefault();
-                                    if (purchases.length >= 1) {
-                                        localStorage.setItem('purchases', JSON.stringify([]));
-                                        setPurchases(LocalStorage.getObjectFromLocalStorage('purchases'))
-                                    } else {
-                                        alert("You can't delete an empty cart.");
-                                    }
-                                }}/>
-                                <FinishButton content="Finish" onClick={(e) => {
-                                    e.preventDefault()
-                                }}/>
+                                <CancelButton content="Cancel" onClick={cancelButton}/>
+                                <FinishButton content="Finish" onClick={finishButton}/>
                             </div>
                         </div>
                     </form>

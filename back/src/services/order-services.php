@@ -11,9 +11,10 @@ function getOrders() {
     }
 }
 
-function createOrderLine() {
+function createOrderLine($day) {
     try {
-        $stmt = myPDO->prepare('INSERT INTO orders (total, tax) VALUES (0, 0);');
+        $stmt = myPDO->prepare('INSERT INTO orders (total, tax, day) VALUES (0, 0, :day)');
+        $stmt->bindParam(':day', $day);
         $stmt->execute();
 
         $code = myPDO->lastInsertId();
@@ -21,7 +22,8 @@ function createOrderLine() {
         echo json_encode([
             'code' => $code, 
             'total' => 0, 
-            'tax' => 0
+            'tax' => 0,
+            'day' => $day
         ]);
     } catch(PDOException $e) {
         echo json_encode(['error' => $e->getMessage()]);

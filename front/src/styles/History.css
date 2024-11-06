@@ -11,3 +11,24 @@ main {
     gap: 6rem;
     margin: 5rem 0;
 }
+
+.thPurchaseCode {
+    border-left: none;
+    width: 20%;
+}
+
+.thTax {
+    width: 15%;
+}
+
+.thTotal {
+    width: 25%;
+}
+
+.thDate {
+    width: 25%;
+}
+
+.lastTd {
+    width: 15%;
+}

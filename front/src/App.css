@@ -93,6 +93,8 @@ p, button, h1, span, a, h3, img, th, td {
 .subtitle {
   display: flex;
   justify-content: center;
+  align-self: center;
+  width: fit-content;
 }
 
 .subtitle:hover {

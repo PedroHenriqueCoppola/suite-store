@@ -14,7 +14,10 @@ function executeEndPoints() {
             break;
 
         case 'POST':
-            createOrderLine();
+            $json = file_get_contents('php://input');
+            $data = json_decode($json, true);
+            $day = $data['day'];
+            createOrderLine($day);
             break;
         
         case 'PUT':
