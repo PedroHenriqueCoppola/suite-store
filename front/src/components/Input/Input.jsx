@@ -14,6 +14,7 @@ function Input(props) {
                     minLength={props.minlength}
                     maxLength={props.maxlength}
                     step={props.step}
+                    value={props.value}
                     required={props.required}
                     disabled={props.disabled}
                     onChange={props.onChange}

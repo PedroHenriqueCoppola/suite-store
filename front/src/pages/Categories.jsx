@@ -6,11 +6,12 @@ import Input from '../components/Input/Input';
 import Title from '../components/Title/Title';
 import DeleteButton from '../components/DeleteButton/DeleteButton';
 import Subtitle from '../components/Subtitle/Subtitle';
+import Globals from '../classes/Globals';
 
 function Categories() {
-    const categoryName = document.getElementById("categoryName");
-    const tax = document.getElementById("tax");
     const [categories, setCategories] = useState([]);
+    const categoryName = document.getElementById("categoryName");
+    const categoryTax = document.getElementById("categoryTax");
 
     useEffect(() => {
         getCategories()
@@ -38,39 +39,71 @@ function Categories() {
         setCatTax(e.target.value) // seta no 'catTax' o valor do que ta sendo atualizado no input
     }
 
+    function validateCategories() {
+        const catNameValue = categoryName.value;
+        const catTaxValue = categoryTax.value;
+
+        if(catNameValue == "" || catTaxValue == ""){
+            alert("Please fill all the information correctly.")
+            return false
+        }
+
+        if(catNameValue.length > 25) {
+            alert("The maximum is 25 characters.");
+            return false;
+        }
+
+        if(!Globals.limitTextInput(catNameValue)) {
+            alert("Special characters or numbers are not allowed for the name.");
+            return false;
+        }
+
+        if((catTaxValue) > 100 || catTaxValue < 1 || isNaN(catTaxValue)) {
+            alert("Please, insert an number between 1 and 100");
+            return false;
+        }
+    }
+
     const handleSubmit = async (e) =>{
         e.preventDefault();
-        const formData = new FormData();
-
-        formData.append("name", catName); // coloca o valor de 'catName' atulizado no input em "name" que vai ser resgatado no PHP
-        formData.append("tax", catTax); // mesmo do de cima
-
-        try {
-            fetch('http://localhost/routes/category.php', {
+        if(validateCategories() != false) {
+            const formData = new FormData();
+            formData.append("name", Globals.validateInputSpacesAndCapitalize(catName)); // coloca o valor de 'catName' atulizado no input em "name" que vai ser resgatado no PHP
+            formData.append("tax", catTax); // mesmo do de cima
+    
+            await fetch('http://localhost/routes/category.php', {
                 method: 'POST',
                 body: formData // fetch no formdata
+            })
+            .then((response) => {
+                if(!response.ok) alert("Something went wrong. Please try again.");
             })
             .then(() => {
                 getCategories();
                 categoryName.value = "";
-                tax.value = "";
+                categoryTax.value = "";
                 // modal de success
             })
-        } catch (error) {
-            console.log("Error:", error);
+            .catch((error) => {
+                console.log('error: ' + error);
+            });
         }
     }
 
     async function handleDeleteCategory(code) {
-        try {
+        if(window.confirm("Are you sure you want to delete this category?")) {  
             await fetch(`http://localhost/routes/category.php?code=${code}`, {
                 method: "DELETE"
+            })
+            .then((response) => {
+                if(!response.ok) alert("You can't delete a category that is being used.");
             })
             .then(() => {
                 getCategories();
             })
-        } catch (error) {
-            console.log(error.message);
+            .catch((error) => {
+                console.log('error: ' + error);
+            });
         }
     }
 
@@ -85,7 +118,7 @@ function Categories() {
                             name="catName"
                             id="categoryName"
                             span="Category name"
-                            content="No special characters or numbers"
+                            content="No special characters"
                             onChange={handleChangeName}
                             required 
                         />
@@ -94,7 +127,7 @@ function Categories() {
                             type="number"
                             className="inputBox" 
                             name="catTax"
-                            id="tax"
+                            id="categoryTax"
                             span="Tax"
                             content="Decimal number (ex.: 10.00)"
                             step="0.01"

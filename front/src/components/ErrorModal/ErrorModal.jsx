@@ -52,3 +52,5 @@ function ErrorModal(props) {
 }
 
 export default ErrorModal;
+
+{/* <ErrorModal content="Please, fill all the information correctly!"/> */}

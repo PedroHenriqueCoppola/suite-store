@@ -54,7 +54,7 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 /* não selecionar */
-p, button, h1, span, a, h3, img, th, td { 
+p, button, h1, span, a, h3, img, th, td, h4 { 
   user-select: none;
 }
 

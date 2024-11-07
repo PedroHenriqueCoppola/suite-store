@@ -22,6 +22,7 @@ function addProduct($name, $amount, $price, $category_code) {
         $stmt->bindParam(':category_code', $category_code);
         $stmt->execute();
     } catch(PDOException $e) {
+        http_response_code(401);
         echo json_encode(['error' => $e->getMessage()]);
     }
 }
@@ -32,6 +33,7 @@ function deleteProduct($prodCode) {
         $stmt->bindParam(':code', $prodCode);
         $stmt->execute();
     } catch(PDOException $e) {
+        http_response_code(401);
         echo json_encode(['error' => $e->getMessage()]);
     }
 }

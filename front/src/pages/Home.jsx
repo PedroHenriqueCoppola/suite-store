@@ -10,7 +10,6 @@ import LocalStorage from '../classes/LocalStorage';
 import { useEffect, useState } from 'react';
 import Subtitle from '../components/Subtitle/Subtitle';
 import DeleteButton from '../components/DeleteButton/DeleteButton';
-import ViewButton from '../components/ViewButton/ViewButton'
 
 function Home() {
     // useStates
@@ -28,6 +27,7 @@ function Home() {
     
     // consts
     const product = document.getElementById("product");
+    const productSelect = document.querySelector(".productSelect");
     const purchaseAmount = document.getElementById("purchaseAmount");
     const purchaseTax = document.getElementById("purchaseTax");
     const purchasePrice = document.getElementById("purchasePrice");
@@ -69,9 +69,46 @@ function Home() {
         purchasePrice.value = ("Unit price: " + productProperties.price)
     }
 
+    function getCategoryAndProductById(productCode) {
+        const product = products.find(p => p.code == productCode); // pegando o product pelo id
+        return product;
+    }
+
     // validação
     function checkPurchaseInputs() {
-        return true;
+        const homeAmountVal = purchaseAmount.value;
+        let productCode = productSelect.value;
+
+        if(homeAmountVal == "") {
+            alert("Please insert an amount.")
+            return false;
+        }
+
+        if(homeAmountVal <= 0 || isNaN(homeAmountVal)) {
+            alert("Please, insert an number bigger than 0.");
+            return false;
+        }
+        
+        if(getSelectedProduct()) {
+            alert("You already added this product to your cart. Please, modify it.");
+            return false;
+        }
+
+        if(homeAmountVal > getCategoryAndProductById(productCode).amount) {
+            alert("You can't buy an amount bigger than the stock amount.");
+            return false;
+        }
+    }
+
+    function getSelectedProduct() {
+        const purchases = LocalStorage.getObjectFromLocalStorage('purchases');
+        let productCode = productSelect.value;
+    
+        const teste = purchases.find(el => el.id == productCode); // pegando o product pelo id
+        if (teste == undefined) {
+            return;
+        }
+        return teste;
     }
 
     // localstorage
@@ -131,21 +168,25 @@ function Home() {
     }
 
     const deleteCard = (cardCode) => {
-        const deleteProd = purchases.filter(purchase => purchase.cardCode != cardCode);
-        setPurchases(deleteProd);
-        localStorage.setItem('purchases', JSON.stringify(deleteProd));
-        
-        updateTax()
-        updatePrice()
+        if(window.confirm("Are you sure you want to delete this product?")) {
+            const deleteProd = purchases.filter(purchase => purchase.cardCode != cardCode);
+            setPurchases(deleteProd);
+            localStorage.setItem('purchases', JSON.stringify(deleteProd));
+            
+            updateTax()
+            updatePrice()
+        }
     };
 
     function cancelButton(e) {
         e.preventDefault();
-        if (purchases.length >= 1) {
-            localStorage.setItem('purchases', JSON.stringify([]));
-            setPurchases(LocalStorage.getObjectFromLocalStorage('purchases'))
-        } else {
-            alert("You can't delete an empty cart.");
+        if(window.confirm("Are you sure you want to clear your cart?")) {
+            if (purchases.length >= 1) {
+                localStorage.setItem('purchases', JSON.stringify([]));
+                setPurchases(LocalStorage.getObjectFromLocalStorage('purchases'))
+            } else {
+                alert("You can't delete an empty cart.");
+            }
         }
     }
 
@@ -181,59 +222,62 @@ function Home() {
     async function finishButton(e) {
         e.preventDefault();
 
-        if (purchases.length <= 0) {
-            alert("Please, add an product in your cart first.");
-        } else {
-            // criar o order
-            const date = new Date().toLocaleString();
-            const order = await fetch(urlOrders, {
-                method: 'POST',
-                body: JSON.stringify({day: date})
-            })
-            .then(res => res.json())
-            .catch(error => {
-                console.log("Erro: ", error);
-            })
-
-            // cria o objeto e salva no banco
-            const object = purchases.map(async purchase => {
-                await fetch(urlOrderItem, {
+        if(window.confirm("Finish this purchase?")) {
+            if (purchases.length <= 0) {
+                alert("Please, add an product in your cart first.");
+            } else {
+                // criar o order
+                const date = new Date().toLocaleString();
+                const order = await fetch(urlOrders, {
                     method: 'POST',
-                    body: JSON.stringify({code: order.code, prodCode: purchase.id, amount: purchase.amount})
+                    body: JSON.stringify({day: date})
                 })
-
-                // atualizar os valores
-                const data = {
-                    code: await getLastCode(),
-                    tax: LocalStorage.getCorrectFloatToSave(tax),
-                    total: LocalStorage.getCorrectFloatToSave(price)
-                }
-
-                fetch(urlOrders, {
-                    method: 'PUT',
-                    body: JSON.stringify(data) 
+                .then(res => res.json())
+                .catch(error => {
+                    console.log("Erro: ", error);
                 })
-            })
-
-            // diminui no estoque
-            const promise3 = purchases.forEach(e => {
-                const stock = {
-                    id: e.id,
-                    amount: e.amount
-                }
-
-                fetch(urlOrderItem, {
-                    method: 'PUT',
-                    body: JSON.stringify(stock)
+    
+                // cria o objeto e salva no banco
+                const object = purchases.map(async purchase => {
+                    await fetch(urlOrderItem, {
+                        method: 'POST',
+                        body: JSON.stringify({code: order.code, prodCode: purchase.id, amount: purchase.amount})
+                    })
+    
+                    // atualizar os valores
+                    const data = {
+                        code: await getLastCode(),
+                        tax: LocalStorage.getCorrectFloatToSave(tax),
+                        total: LocalStorage.getCorrectFloatToSave(price)
+                    }
+    
+                    fetch(urlOrders, {
+                        method: 'PUT',
+                        body: JSON.stringify(data) 
+                    })
                 })
-            })
-
-            Promise.all([order, object, promise3]).then(async () => {
-                localStorage.setItem('purchases', JSON.stringify([]));
-                setPurchases(LocalStorage.getObjectFromLocalStorage('purchases'));
-                setTax(0);
-                setPrice(0);
-            })
+    
+                // diminui no estoque
+                const promise3 = purchases.forEach(e => {
+                    const stock = {
+                        id: e.id,
+                        amount: e.amount
+                    }
+    
+                    fetch(urlOrderItem, {
+                        method: 'PUT',
+                        body: JSON.stringify(stock)
+                    })
+                })
+    
+                Promise.all([order, object, promise3]).then(async () => {
+                    localStorage.setItem('purchases', JSON.stringify([]));
+                    setPurchases(LocalStorage.getObjectFromLocalStorage('purchases'));
+                    setTax(0);
+                    setPrice(0);
+                    window.alert("Purchase successfully completed.")
+                })
+            }
         }
     }
     
@@ -332,8 +376,6 @@ function Home() {
                         </div>
                     </form>
                 </div>
-                
-                <ErrorModal content="Please, fill all the information correctly!"/>
             </main>
         </div>
     )

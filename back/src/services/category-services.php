@@ -28,6 +28,7 @@ function addCategory($name, $tax) {
         $stmt->bindParam(':tax', $tax);
         $stmt->execute();
     } catch(PDOException $e) {
+        http_response_code(401);
         echo json_encode(['error' => $e->getMessage()]);
     }
 }
@@ -38,6 +39,7 @@ function deleteCategory($catCode) {
         $stmt->bindParam(':code', $catCode);
         $stmt->execute();
     } catch(PDOException $e) {
+        http_response_code(401);
         echo json_encode(['error' => $e->getMessage()]);
     }
 }

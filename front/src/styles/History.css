@@ -32,3 +32,8 @@ main {
 .lastTd {
     width: 15%;
 }
+
+/* resto dos styles na home.css */
+.productCard {
+    padding: 3rem;
+}

@@ -6,6 +6,7 @@ import Input from '../components/Input/Input';
 import Title from '../components/Title/Title';
 import Subtitle from '../components/Subtitle/Subtitle';
 import DeleteButton from '../components/DeleteButton/DeleteButton';
+import Globals from '../classes/Globals';
 
 function Products() {
     const category = document.getElementById("category");
@@ -32,7 +33,6 @@ function Products() {
             const response = await fetch("http://localhost/routes/product.php");
             const records = await response.json();
             setProducts(records);
-            console.log(setProducts)
         }
         catch (error) {
             console.log("Error:", error);
@@ -60,19 +60,54 @@ function Products() {
         setCatName(e.target.value)
     }
 
+    function validateProducts() {
+        const prodNameVal = productName.value;
+        const prodAmountVal = productAmount.value;
+        const prodPriceVal = unitPrice.value;
+        const catVal = category.value;
+
+        if(prodNameVal == "" || prodAmountVal == "" || prodPriceVal == "" || catVal == "") {
+            alert("Please fill all the information correctly.")
+            return false
+        }
+
+        if(prodNameVal.length > 30) {
+            alert("The max name length is 30 characters.");
+            return false;
+        }
+
+        if(!Globals.limitTextInput(prodNameVal)) {
+            alert("Special characters are not allowed.");
+            return false;
+        }
+
+        if((prodAmountVal) > 100000 || prodAmountVal < 1 || isNaN(prodAmountVal)) {
+            alert("Please, insert an number between 1 and 100.000.");
+            return false;
+        }
+
+        if((prodPriceVal) > 1000000 || prodPriceVal < 1 || isNaN(prodPriceVal)) {
+            alert("Please, insert an number between 1 and 1.000.000.");
+            return false;
+        }
+    }
+
     const handleSubmit = async (e) =>{
         e.preventDefault();
-        const formData = new FormData();
-
-        formData.append("product", prodName);
-        formData.append("amount", prodAmount); 
-        formData.append("price", prodPrice);
-        formData.append("category", catName);
-
-        try {
-            fetch('http://localhost/routes/product.php', {
+        if(validateProducts() != false) {
+            const formData = new FormData();
+    
+            formData.append("product", Globals.validateInputSpacesAndCapitalize(prodName));
+            formData.append("amount", prodAmount); 
+            formData.append("price", prodPrice);
+            formData.append("category", catName);
+    
+            await fetch('http://localhost/routes/product.php', {
                 method: 'POST',
                 body: formData
+            })
+            .then((response) => {
+                if(!response.ok) alert("Something went wrong. Please try again.");
             })
             .then(() => {
                 getProducts();
@@ -81,21 +116,23 @@ function Products() {
                 unitPrice.value = '';
                 // modal de success
             })
-        } catch (error) {
-            console.log("Error:", error);
         }
     }
 
     async function handleDeleteProduct(code) {
-        try {
+        if(window.confirm("Are you sure you want to delete this product?")) {
             await fetch(`http://localhost/routes/product.php?code=${code}`, {
                 method: "DELETE"
+            })
+            .then((response) => {
+                if(!response.ok) alert("You can't delete a product that has already been purchased.");
             })
             .then(() => {
                 getProducts();
             })
-        } catch (error) {
-            console.log(error.message);
+            .catch((error) => {
+                console.log('error: ' + error);
+            });
         }
     }
 
@@ -111,7 +148,7 @@ function Products() {
                                 name="prodName"
                                 id="productName"
                                 span="Product name"
-                                content="No special characters or numbers"
+                                content="No special characters"
                                 onChange={handleChangeName}
                                 required
                             />
