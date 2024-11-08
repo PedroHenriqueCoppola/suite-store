@@ -276,13 +276,14 @@ function Home() {
                         body: JSON.stringify(stock)
                     })
                 })
-    
+
                 Promise.all([order, object, promise3]).then(async () => {
                     localStorage.setItem('purchases', JSON.stringify([]));
                     setPurchases(LocalStorage.getObjectFromLocalStorage('purchases'));
                     setTax(0);
                     setPrice(0);
                     window.alert("Purchase successfully completed.");
+                    await new Promise(r => setTimeout(r, 500));
                     window.location.reload();
                 })
             }
