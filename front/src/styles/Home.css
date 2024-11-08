@@ -12,24 +12,40 @@ main {
     margin: 5rem 0;
 }
 
-.gridBoxHome {
+.allDisplay {
     background-color: var(--black);
     border-radius: 20px;
     padding: 6rem;
-    display: grid;
+    display: flex;
+    flex-direction: column;
     gap: 4rem;
-    column-gap: 2rem;
-    grid-template-columns: auto auto auto;
-    grid-template-rows: auto auto auto;
 }
 
-.productContent {grid-column: 1/4;}
+.prodAndAmount {
+    display: flex;
+    width: 100%;
+    gap: 3rem;
+}
+
 .productButton {grid-column: 1/4;}
 
 .productContent {
     display: flex;
+    width: 100%;
     flex-direction: column;
     gap: .5rem;
+}
+
+.amountContent {
+    width: 100%;
+}
+
+.infosAndButton {
+    display: grid;
+    column-gap: 3rem;
+    row-gap: 4rem;
+    grid-template-columns: auto auto auto;
+    grid-template-rows: auto auto;
 }
 
 .allCards {

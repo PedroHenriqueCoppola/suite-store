@@ -12,6 +12,33 @@ main {
     margin: 5rem 0;
 }
 
+.historyTableDiv {
+    max-height: 49rem;
+    overflow-y: auto;
+}
+
+#historyTable {
+    width: 98%;
+}
+
+::-webkit-scrollbar{
+    width: 1rem;
+}
+
+::-webkit-scrollbar-track{
+    background-color: var(--oil-black);
+    border-radius: 1rem;
+}
+  
+::-webkit-scrollbar-thumb{
+    background-color: var(--oil-black-light);
+    border-radius: 10px;
+}
+  
+::-webkit-scrollbar-thumb:hover{
+    background-color: var(--oil-black-darker);
+}
+
 .thPurchaseCode {
     border-left: none;
     width: 20%;

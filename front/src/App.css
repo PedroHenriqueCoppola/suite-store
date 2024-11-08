@@ -13,8 +13,8 @@
   -webkit-text-size-adjust: 100%;
 
   font-family: 'Montserrat', sans-serif;
+  /* font-family: "Plus Jakarta Sans", sans-serif; */ 
 }
-/* font-family: "Plus Jakarta Sans", sans-serif; */
 
 :root {
   font-size: 62.5%;
@@ -25,7 +25,8 @@
   --ghostwhite: hsl(240, 7%, 78%);
   --white: hsl(0, 0%, 100%);
   --black: hsl(240, 10%, 4%);
-  --oil-black-darker: hwb(240 11% 89%);
+  --oil-black-darker: hwb(240 11% 87%);
+  --oil-black-light: hwb(0 9% 91%);
   --oil-black: hsl(240, 6%, 17%);
   --cancel: hsl(240, 15%, 71%);
   --cancel-darker: hsl(240, 7%, 58%);
@@ -37,6 +38,7 @@ body::-webkit-scrollbar {
 
 body::-webkit-scrollbar-track {
   background: var(--oil-black);
+  border-radius: 0;
 }
 
 body::-webkit-scrollbar-thumb {

@@ -22,8 +22,17 @@ function Footer() {
                             <span>SOCIAL</span>
                             <div className="texts">
                                 <a href="https://github.com/PedroHenriqueCoppola" target='_blank'>GitHub</a>
+                                <a href="https://www.instagram.com/pedrocoppola_/" target='_blank'>Instagram</a>
                                 <a href="https://www.linkedin.com/in/pedro-henrique-coppola-071baa225/" target='_blank'>LinkedIn</a>
                                 <a href="https://www.softexpert.com/pt-BR/" target='_blank'>SoftExpert</a>
+                            </div>
+                        </div>
+
+                        <div className="about">
+                            <span>ABOUT</span>
+                            <div className="texts">
+                                <a href="/about">About Us</a>
+                                <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target='_blank'>Contact</a>
                             </div>
                         </div>
                     </div>

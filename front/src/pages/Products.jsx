@@ -208,31 +208,33 @@ function Products() {
                     <Title content="Here you can see all the products." />
 
                     {products.length >= 1 ? (
-                        <table id="productsTable">
-                            <thead>
-                                <tr>
-                                    <th className="thProdCode">Code</th>
-                                    <th className="thProd">Product</th>
-                                    <th className="thProdAmount">Amount</th>
-                                    <th className="thProdPrice">Unit price</th>
-                                    <th className="thCatName">Category</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {products.map((product) => (
-                                    <tr key={product.code}>
-                                        <td className="firstTd">{product.code}</td>
-                                        <td>{product.name}</td>
-                                        <td>{product.amount}</td>
-                                        <td>{product.price}</td>
-                                        <td>{product.catname}</td>
-                                        <td className='lastTd'>
-                                            <DeleteButton className="prodButton" onClick={() => handleDeleteProduct(product.code)}/>
-                                        </td>
+                        <div className="prodTableDiv">
+                            <table id="productsTable">
+                                <thead>
+                                    <tr>
+                                        <th className="thProdCode">Code</th>
+                                        <th className="thProd">Product</th>
+                                        <th className="thProdAmount">Amount</th>
+                                        <th className="thProdPrice">Unit price</th>
+                                        <th className="thCatName">Category</th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    {products.map((product) => (
+                                        <tr key={product.code}>
+                                            <td className="firstTd">{product.code}</td>
+                                            <td>{product.name}</td>
+                                            <td>{product.amount}</td>
+                                            <td>{product.price}</td>
+                                            <td>{product.catname}</td>
+                                            <td className='lastTd'>
+                                                <DeleteButton className="prodButton" onClick={() => handleDeleteProduct(product.code)}/>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
                     ) : (<Subtitle className="subtitle" content="There aren’t products registered yet."/>)} 
                 </div>
             </main>

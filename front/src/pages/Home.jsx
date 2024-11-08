@@ -31,28 +31,14 @@ function Home() {
     const purchaseAmount = document.getElementById("purchaseAmount");
     const purchaseTax = document.getElementById("purchaseTax");
     const purchasePrice = document.getElementById("purchasePrice");
+    const stockAmount = document.getElementById("stockAmount");
 
     useEffect(() => {
         LocalStorage.initPurchases();
         setPurchases(LocalStorage.getObjectFromLocalStorage('purchases'));
         
-        const fetchData = async() => {
-            fetch(urlProducts)
-            .then((res) => res.json())
-            .then((data) => {
-                setProducts(data)
-            })
-            .catch((error) => {console.log("Erro: ", error)})
-            
-            fetch(urlCategories)
-            .then((res) => res.json())
-            .then((data) => {
-                setCategories(data)
-            })
-            .catch((error) => {console.log("Erro: ", error)})
-        }
-        
-        fetchData();
+        getProducts();
+        getCategories();
     }, []);
 
     useEffect(() => {
@@ -60,13 +46,34 @@ function Home() {
         updatePrice()
         verifyTaxAndPrice()
     }, [purchases]);
+    
+
+    async function getProducts() {
+        fetch(urlProducts)
+        .then((res) => res.json())
+        .then((data) => {
+            setProducts(data)
+            return data;
+        })
+        .catch((error) => {console.log("Erro: ", error)})
+    }
+
+    async function getCategories() {
+        fetch(urlCategories)
+        .then((res) => res.json())
+        .then((data) => {
+            setCategories(data)
+        })
+        .catch((error) => {console.log("Erro: ", error)})
+    }
 
     let updateDisabledInputs = () => {
         const productProperties = products.find(el => el.code == product.value);
         const categoryProperties = categories.find(el => el.code == productProperties.category_code)
-
+        
         purchaseTax.value = ("Tax: " + categoryProperties.tax + "%");
-        purchasePrice.value = ("Unit price: " + productProperties.price)
+        purchasePrice.value = ("Unit price: " + productProperties.price);
+        stockAmount.value = ("Available amount: " + productProperties.amount);
     }
 
     function getCategoryAndProductById(productCode) {
@@ -275,7 +282,8 @@ function Home() {
                     setPurchases(LocalStorage.getObjectFromLocalStorage('purchases'));
                     setTax(0);
                     setPrice(0);
-                    window.alert("Purchase successfully completed.")
+                    window.alert("Purchase successfully completed.");
+                    window.location.reload();
                 })
             }
         }
@@ -285,48 +293,63 @@ function Home() {
         <div className="homeApp">
             <main>
                 <form id="addProductForm" autoComplete="off" onSubmit={addNewPurchase}>
-                    <div className="gridBoxHome">
-                        <div className="productContent">
-                            <select name="productSelect" id="product" className="select productSelect" onChange={updateDisabledInputs}>
-                                <option value="" hidden>Select the product</option>
-                                {products.map((product) => (
-                                    <option key={product.code} value={product.code}>{product.name}</option>
-                                ))}                               
-                            </select>
-                            <p>Select your product</p>
+                    <div className="allDisplay">
+                        <div className="prodAndAmount">
+                            <div className="productContent">
+                                <select name="productSelect" id="product" className="select productSelect" onChange={updateDisabledInputs}>
+                                    <option value="" hidden>Select the product</option>
+                                    {products.map((product) => (
+                                        <option key={product.code} value={product.code}>{product.name}</option>
+                                    ))}                               
+                                </select>
+                                <p>Select your product</p>
+                            </div>
+                            
+                            <div className="amountContent">
+                                <Input
+                                    type="number"
+                                    className="inputBox" 
+                                    name="purchaseAmount"
+                                    id="purchaseAmount"
+                                    span="Amount"
+                                    content="Integer number (ex.: 10)"
+                                    min="1"
+                                    required
+                                />
+                            </div>
                         </div>
 
-                        <Input
-                            type="number"
-                            className="inputBox" 
-                            name="purchaseAmount"
-                            id="purchaseAmount"
-                            span="Amount"
-                            content="Integer number (ex.: 10)"
-                            min="1"
-                            required
-                        />
+                        <div className="infosAndButton">
+                            <Input
+                                type="text"
+                                className="inputBox" 
+                                name="purchaseTax"
+                                id="purchaseTax"
+                                placeholder="Tax:"
+                                disabled
+                            />
 
-                        <Input
-                            type="text"
-                            className="inputBox" 
-                            name="purchaseTax"
-                            id="purchaseTax"
-                            placeholder="Tax:"
-                            disabled
-                        />
+                            <Input
+                                type="text"
+                                className="inputBox" 
+                                name="purchasePrice"
+                                id="purchasePrice"
+                                placeholder="Unit price:"
+                                disabled
+                            />
 
-                        <Input
-                            type="text"
-                            className="inputBox" 
-                            name="purchasePrice"
-                            id="purchasePrice"
-                            placeholder="Unit price:"
-                            disabled
-                        />
-                        
-                        <div className="productButton">
-                            <AddNewButton type="submit" id="productButton" content="Add Product" />
+                            <Input
+                                type="text"
+                                className="inputBox" 
+                                name="stockAmount"
+                                id="stockAmount"
+                                placeholder="Available amount:"
+                                disabled
+                            />  
+                            
+                            <div className="productButton">
+                                <AddNewButton type="submit" id="productButton" content="Add Product" />
+                            </div>
                         </div>
                     </div>
                 </form>

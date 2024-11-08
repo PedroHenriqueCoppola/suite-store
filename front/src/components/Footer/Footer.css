@@ -2,10 +2,6 @@ p, a, span {
     color: white;
 }
 
-.line {
-    border: 1px solid white;
-}
-
 .footerApp {
     display: flex;
     align-items: center;
@@ -25,6 +21,7 @@ footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 2rem;
 }
 
 span {
@@ -35,14 +32,14 @@ span {
 
 .info {
     display: flex;
-    flex-direction: column;
-    gap: 3rem;
+    gap: 12rem;
 }
 
 .texts {
     display: flex;
+    flex-direction: column;
     margin-top: 1.6rem;
-    gap: 3.2rem;
+    gap: 2.4rem;
 }
 
 .texts > a {

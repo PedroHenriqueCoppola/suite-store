@@ -1,0 +1,53 @@
+.aboutApp {
+    display: flex;
+    justify-content: center;
+    background-color: var(--oil-black);
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    width: 1200px;
+    gap: 6rem;
+    margin: 5rem 0;
+}
+
+.aboutTitle {
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: 800;
+    color: var(--purple-600);
+    font-size: 5.5rem;
+}
+
+.contentCard {
+    display: flex;
+    gap: 2.8rem;
+}
+
+.aboutApp > main > .contentCard {
+    display: flex;
+    align-items: center;
+}
+
+.aboutLine {
+    border: 1px solid var(--purple-400);
+    width: 75%;
+}
+
+.aboutText {
+    max-width: 100rem;
+    display: flex;
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: 200;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    color: var(--white);
+    margin: 0;
+}
+
+.aboutSubTitle {
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: 800;
+    color: var(--purple-600);
+    font-size: 3rem;
+}

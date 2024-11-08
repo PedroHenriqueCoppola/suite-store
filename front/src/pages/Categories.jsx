@@ -54,7 +54,7 @@ function Categories() {
         }
 
         if(!Globals.limitTextInput(catNameValue)) {
-            alert("Special characters or numbers are not allowed for the name.");
+            alert("Special characters are not allowed for the name.");
             return false;
         }
 
@@ -143,27 +143,30 @@ function Categories() {
                     <Title content="Here you can see all the categories."/>
 
                     {categories.length >= 1 ? (
-                        <table id="categoryTable">
-                            <thead>
-                                <tr>
-                                    <th className="thCode">Code</th>
-                                    <th className="thCat">Category</th>
-                                    <th className="thTax">Tax (%)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {categories.map((category) => (
-                                    <tr key={category.code}>
-                                        <td className="firstTd">{category.code}</td>
-                                        <td>{category.name}</td>
-                                        <td>{category.tax}%</td>
-                                        <td className='lastTd'>
-                                            <DeleteButton onClick={() => handleDeleteCategory(category.code)}/>
-                                        </td>
+                        <div className="catTableDiv">
+                            <table id="categoryTable">
+                                <thead>
+                                    <tr>
+                                        <th className="thCode">Code</th>
+                                        <th className="thCat">Category</th>
+                                        <th className="thTax">Tax (%)</th>
                                     </tr>
-                                ))}
-                            </tbody> 
-                        </table>
+                                </thead>
+                                <tbody>
+                                    {categories.map((category) => (
+                                        <tr key={category.code}>
+                                            <td className="firstTd">{category.code}</td>
+                                            <td>{category.name}</td>
+                                            <td>{category.tax}%</td>
+                                            <td className='lastTd'>
+                                                <DeleteButton onClick={() => handleDeleteCategory(category.code)}/>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody> 
+                            </table>
+                        </div>
+                        
                     ) : (<Subtitle className="subtitle" content="There aren’t categories registered yet."/>)} 
                 </div>
             </main>
