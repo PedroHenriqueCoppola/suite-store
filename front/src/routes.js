@@ -6,6 +6,7 @@ import Products from "./pages/Products";
 import Categories from "./pages/Categories";
 import History from "./pages/History";
 import About from "./pages/About";
+import Error from "./pages/Error";
 
 const Router = () => {
    return(
@@ -19,6 +20,8 @@ const Router = () => {
             <Route element={<History />} path="/history" />
 
             <Route element={<About />} path="/about" />
+
+            <Route element={<Error />} path="*" />
         </Routes>
    )
 }
